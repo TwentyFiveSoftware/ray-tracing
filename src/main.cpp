@@ -1,22 +1,16 @@
 #include <SDL.h>
 #include <thread>
-#include <glm/glm.hpp>
-//#include <chrono>
+#include <array>
+#include "pixel.h"
+#include "settings.h"
+#include "renderer.h"
 
 SDL_Window* window;
 SDL_Renderer* renderer;
 
-const uint16_t FPS = 10;
-const uint16_t RENDER_THREAD_COUNT = 4;
-const uint16_t WIDTH = 1000;
-const uint16_t HEIGHT = 600;
-
-
 void initSDL() {
     SDL_Init(SDL_INIT_VIDEO);
-
-    window = SDL_CreateWindow("Ray Tracing", 100, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-
+    window = SDL_CreateWindow("Ray Tracing", 100, 100, Settings::WIDTH, Settings::HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, 0);
 }
 
@@ -43,30 +37,8 @@ void cleanup() {
 }
 
 
-struct Pixel {
-    glm::ivec2 pos;
-    glm::vec3 color;
-};
-
-Pixel pixels[WIDTH * HEIGHT];
-
-
-void render(uint16_t startY, uint16_t endY) {
-    for (uint16_t y = startY; y < endY; y++) {
-        for (uint16_t x = 0; x < WIDTH; x++) {
-            float r = float(x) / WIDTH;
-            float g = float(y) / HEIGHT;
-            float b = 0.25f;
-
-            pixels[y * WIDTH + x] = {
-                    .pos = {x, y},
-                    .color = {r, g, b}
-            };
-        }
-
-//        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
-}
+std::array<std::thread, Settings::RENDER_THREAD_COUNT> renderThreads;
+std::array<Pixel, Settings::WIDTH * Settings::HEIGHT> pixels;
 
 
 void renderPixelsToScreen() {
@@ -78,16 +50,14 @@ void renderPixelsToScreen() {
     }
 }
 
-std::thread renderThreads[RENDER_THREAD_COUNT];
-
 int WinMain() {
     initSDL();
 
-    auto rowsPerThread = static_cast<uint16_t>(ceil(float(HEIGHT) / RENDER_THREAD_COUNT));
-    for (int i = 0; i < RENDER_THREAD_COUNT; i++) {
-        uint16_t startY = static_cast<uint16_t>(std::fmin(i * rowsPerThread, HEIGHT));
-        uint16_t endY = static_cast<uint16_t>(std::fmin(i * rowsPerThread + rowsPerThread, HEIGHT));
-        renderThreads[i] = std::thread(render, startY, endY);
+    auto rowsPerThread = static_cast<uint16_t>(ceil(float(Settings::HEIGHT) / Settings::RENDER_THREAD_COUNT));
+    for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
+        auto startY = static_cast<uint16_t>(std::fmin(i * rowsPerThread, Settings::HEIGHT));
+        auto endY = static_cast<uint16_t>(std::fmin(i * rowsPerThread + rowsPerThread, Settings::HEIGHT));
+        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, &pixels);
     }
 
     bool shouldClose = false;
@@ -101,7 +71,7 @@ int WinMain() {
         renderPixelsToScreen();
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(1000 / FPS);
+        SDL_Delay(1000 / Settings::FPS);
     }
 
 

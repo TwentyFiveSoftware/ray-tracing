@@ -12,6 +12,16 @@ link_directories(
         lib/SDL2-2.0.16/lib/x64
 )
 
-add_executable(RayTracing WIN32 src/main.cpp)
+add_executable(
+        RayTracing
+        WIN32
+        src/main.cpp
+        src/settings.h
+        src/pixel.h
+        src/renderer.h
+        src/renderer.cpp
+        src/ray.h
+        src/ray.cpp
+)
 
 target_link_libraries(RayTracing SDL2.lib)
