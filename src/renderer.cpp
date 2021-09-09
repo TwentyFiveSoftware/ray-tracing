@@ -2,22 +2,34 @@
 #include "ray.h"
 #include "camera.h"
 
-bool rayHitsSphere(const glm::vec3 &sphereCenter, float sphereRadius, const Ray &ray) {
+// returns the first t where the ray intersects with the sphere; if it doesn't intersect: -1.0f
+float rayHitsSphere(const glm::vec3 &sphereCenter, float sphereRadius, const Ray &ray) {
     glm::vec3 co = ray.getOrigin() - sphereCenter;
     float a = glm::dot(ray.getDirection(), ray.getDirection());
-    float b = 2.0f * glm::dot(co, ray.getDirection());
+    float half_b = glm::dot(co, ray.getDirection());
     float c = glm::dot(co, co) - sphereRadius * sphereRadius;
-    float discriminant = b * b - 4 * a * c;
-    return discriminant > 0;
+    float discriminant = half_b * half_b - a * c;
+
+    if (discriminant < 0.0f) {
+        return -1.0f;
+    }
+
+    return (-half_b - std::sqrt(discriminant)) / a;
 }
 
 glm::vec3 calculateRayColor(const Ray &ray) {
-    if (rayHitsSphere(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f, ray)) {
-        return {1.0f, 0.0f, 0.0f};
+    const glm::vec3 SPHERE_CENTER = glm::vec3(0.0f, 0.0f, 1.0f);
+    const float SPHERE_RADIUS = 0.5f;
+
+    float t = rayHitsSphere(SPHERE_CENTER, SPHERE_RADIUS, ray);
+
+    if (t > 0.0f) {
+        glm::vec3 normal = glm::normalize(ray.at(t) - SPHERE_CENTER);
+        return 0.5f * (normal + 1.0f);
     }
 
     // background: linear interpolation between white and blue based on normalized y coordinate of direction vector
-    float t = 0.5f * (glm::normalize(ray.getDirection()).y + 1.0f);
+    t = 0.5f * (glm::normalize(ray.getDirection()).y + 1.0f);
     return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
 }
 
