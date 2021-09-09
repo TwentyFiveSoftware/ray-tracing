@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <thread>
+#include <glm/glm.hpp>
 //#include <chrono>
 
 SDL_Window* window;
@@ -43,8 +44,8 @@ void cleanup() {
 
 
 struct Pixel {
-    uint16_t x, y;
-    uint16_t r, g, b;
+    glm::ivec2 pos;
+    glm::vec3 color;
 };
 
 Pixel pixels[WIDTH * HEIGHT];
@@ -53,11 +54,14 @@ Pixel pixels[WIDTH * HEIGHT];
 void render(uint16_t startY, uint16_t endY) {
     for (uint16_t y = startY; y < endY; y++) {
         for (uint16_t x = 0; x < WIDTH; x++) {
-            auto r = static_cast<uint16_t>((float(x) / WIDTH) * 255);
-            auto g = static_cast<uint16_t>((float(y) / HEIGHT) * 255);
-            uint16_t b = 64;
+            float r = float(x) / WIDTH;
+            float g = float(y) / HEIGHT;
+            float b = 0.25f;
 
-            pixels[y * WIDTH + x] = {x, y, r, g, b};
+            pixels[y * WIDTH + x] = {
+                    .pos = {x, y},
+                    .color = {r, g, b}
+            };
         }
 
 //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -67,8 +71,10 @@ void render(uint16_t startY, uint16_t endY) {
 
 void renderPixelsToScreen() {
     for (const Pixel &pixel : pixels) {
-        SDL_SetRenderDrawColor(renderer, pixel.r, pixel.g, pixel.b, 255);
-        SDL_RenderDrawPoint(renderer, pixel.x, pixel.y);
+        glm::vec3 color = pixel.color * 255.0f;
+        SDL_SetRenderDrawColor(renderer, static_cast<uint8_t>(color.x), static_cast<uint8_t>(color.y),
+                               static_cast<uint8_t>(color.z), 255);
+        SDL_RenderDrawPoint(renderer, pixel.pos.x, pixel.pos.y);
     }
 }
 
@@ -79,9 +85,9 @@ int WinMain() {
 
     auto rowsPerThread = static_cast<uint16_t>(ceil(float(HEIGHT) / RENDER_THREAD_COUNT));
     for (int i = 0; i < RENDER_THREAD_COUNT; i++) {
-        renderThreads[i] = std::thread(render,
-                                       std::fmin(i * rowsPerThread, HEIGHT),
-                                       std::fmin(i * rowsPerThread + rowsPerThread, HEIGHT));
+        uint16_t startY = static_cast<uint16_t>(std::fmin(i * rowsPerThread, HEIGHT));
+        uint16_t endY = static_cast<uint16_t>(std::fmin(i * rowsPerThread + rowsPerThread, HEIGHT));
+        renderThreads[i] = std::thread(render, startY, endY);
     }
 
     bool shouldClose = false;
