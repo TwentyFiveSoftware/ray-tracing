@@ -34,7 +34,8 @@ glm::vec3 calculateRayColor(const Ray &ray) {
 }
 
 void renderThreadEntryPoint(uint16_t startY, uint16_t endY,
-                            std::array<Pixel, Settings::WIDTH * Settings::HEIGHT>* pixels) {
+                            std::array<Pixel, Settings::WIDTH * Settings::HEIGHT>* pixels,
+                            std::atomic<uint32_t>* pixelsRendered) {
 
     for (uint16_t y = startY; y < endY; y++) {
         for (uint16_t x = 0; x < Settings::WIDTH; x++) {
@@ -51,5 +52,7 @@ void renderThreadEntryPoint(uint16_t startY, uint16_t endY,
 
             pixels->at(y * Settings::WIDTH + x) = {.pos = {x, y}, .color = pixelColor};
         }
+
+        *pixelsRendered += Settings::WIDTH;
     }
 }

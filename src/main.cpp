@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <thread>
 #include <array>
+#include <iostream>
 #include "pixel.h"
 #include "settings.h"
 #include "renderer.h"
@@ -39,7 +40,7 @@ void cleanup() {
 
 std::array<std::thread, Settings::RENDER_THREAD_COUNT> renderThreads;
 std::array<Pixel, Settings::WIDTH * Settings::HEIGHT> pixels;
-
+std::atomic<uint32_t> pixelsRendered = {0};
 
 void renderPixelsToScreen() {
     for (const Pixel &pixel : pixels) {
@@ -53,11 +54,14 @@ void renderPixelsToScreen() {
 int WinMain() {
     initSDL();
 
+    auto renderBeginTime = std::chrono::steady_clock::now();
+    std::optional<std::chrono::steady_clock::time_point> renderEndTime = std::nullopt;
+
     auto rowsPerThread = static_cast<uint16_t>(ceil(float(Settings::HEIGHT) / Settings::RENDER_THREAD_COUNT));
     for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
         auto startY = static_cast<uint16_t>(std::fmin(i * rowsPerThread, Settings::HEIGHT));
         auto endY = static_cast<uint16_t>(std::fmin(i * rowsPerThread + rowsPerThread, Settings::HEIGHT));
-        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, &pixels);
+        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, &pixels, &pixelsRendered);
     }
 
     bool shouldClose = false;
@@ -71,6 +75,15 @@ int WinMain() {
         renderPixelsToScreen();
 
         SDL_RenderPresent(renderer);
+
+        if (pixelsRendered == pixels.size() && !renderEndTime) {
+            renderEndTime = std::chrono::steady_clock::now();
+            std::cout << "Rendered in "
+                      << std::chrono::duration_cast<std::chrono::milliseconds>(
+                              renderEndTime.value() - renderBeginTime).count()
+                      << "ms" << std::endl;
+        }
+
         SDL_Delay(1000 / Settings::FPS);
     }
 
