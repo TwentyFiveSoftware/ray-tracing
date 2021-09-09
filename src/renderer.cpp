@@ -2,8 +2,21 @@
 #include "ray.h"
 #include "camera.h"
 
+bool rayHitsSphere(const glm::vec3 &sphereCenter, float sphereRadius, const Ray &ray) {
+    glm::vec3 co = ray.getOrigin() - sphereCenter;
+    float a = glm::dot(ray.getDirection(), ray.getDirection());
+    float b = 2.0f * glm::dot(co, ray.getDirection());
+    float c = glm::dot(co, co) - sphereRadius * sphereRadius;
+    float discriminant = b * b - 4 * a * c;
+    return discriminant > 0;
+}
+
 glm::vec3 calculateRayColor(const Ray &ray) {
-    // linear interpolation between white and blue based on normalized y coordinate of direction vector
+    if (rayHitsSphere(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f, ray)) {
+        return {1.0f, 0.0f, 0.0f};
+    }
+
+    // background: linear interpolation between white and blue based on normalized y coordinate of direction vector
     float t = 0.5f * (glm::normalize(ray.getDirection()).y + 1.0f);
     return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
 }

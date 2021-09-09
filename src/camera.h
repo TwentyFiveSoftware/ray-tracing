@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 
 struct Camera {
-    static const uint16_t VIEWPORT_HEIGHT = 2;
-    static const uint16_t VIEWPORT_WIDTH = static_cast<uint16_t>(VIEWPORT_HEIGHT * Settings::ASPECT_RATIO);
+    constexpr static const float VIEWPORT_HEIGHT = 2.0f;
+    constexpr static const float VIEWPORT_WIDTH = VIEWPORT_HEIGHT * Settings::ASPECT_RATIO;
 
     constexpr static const float FOCAL_LENGTH = 1.0f;
 
