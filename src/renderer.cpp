@@ -1,6 +1,4 @@
 #include "renderer.h"
-#include "ray.h"
-#include "objects/hittable.h"
 #include "settings/camera.h"
 
 glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world) {

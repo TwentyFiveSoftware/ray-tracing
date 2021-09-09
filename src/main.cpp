@@ -78,19 +78,21 @@ int WinMain() {
     while (!shouldClose) {
         shouldClose = handleInput();
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
+        if (!renderEndTime) {
+            if (pixelsRendered == pixels.size()) {
+                renderEndTime = std::chrono::steady_clock::now();
+                std::cout << "Rendered in "
+                          << std::chrono::duration_cast<std::chrono::milliseconds>(
+                                  renderEndTime.value() - renderBeginTime).count()
+                          << "ms" << std::endl;
+            }
 
-        renderPixelsToScreen();
+//            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+//            SDL_RenderClear(renderer);
 
-        SDL_RenderPresent(renderer);
+            renderPixelsToScreen();
 
-        if (pixelsRendered == pixels.size() && !renderEndTime) {
-            renderEndTime = std::chrono::steady_clock::now();
-            std::cout << "Rendered in "
-                      << std::chrono::duration_cast<std::chrono::milliseconds>(
-                              renderEndTime.value() - renderBeginTime).count()
-                      << "ms" << std::endl;
+            SDL_RenderPresent(renderer);
         }
 
         SDL_Delay(1000 / Settings::FPS);
