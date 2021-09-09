@@ -2,8 +2,10 @@
 #include <thread>
 #include <array>
 #include <iostream>
-#include "pixel.h"
-#include "settings.h"
+#include "structs/pixel.h"
+#include "settings/settings.h"
+#include "objects/sphere.h"
+#include "objects/hittable_list.h"
 #include "renderer.h"
 
 SDL_Window* window;
@@ -52,8 +54,15 @@ void renderPixelsToScreen() {
 }
 
 int WinMain() {
+    // INIT
     initSDL();
 
+    // WORLD
+    HittableList world;
+    world.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.0f, -100.5f, 1.0f), 100.0f));
+
+    // RENDERING
     auto renderBeginTime = std::chrono::steady_clock::now();
     std::optional<std::chrono::steady_clock::time_point> renderEndTime = std::nullopt;
 
@@ -61,7 +70,7 @@ int WinMain() {
     for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
         auto startY = static_cast<uint16_t>(std::fmin(i * rowsPerThread, Settings::HEIGHT));
         auto endY = static_cast<uint16_t>(std::fmin(i * rowsPerThread + rowsPerThread, Settings::HEIGHT));
-        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, &pixels, &pixelsRendered);
+        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, &pixels, &pixelsRendered, world);
     }
 
     bool shouldClose = false;

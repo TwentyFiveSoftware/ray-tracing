@@ -15,7 +15,7 @@ public:
     [[nodiscard]] glm::vec3 at(float t) const;
 
 private:
-    glm::vec3 m_origin;
-    glm::vec3 m_direction;
+    glm::vec3 origin;
+    glm::vec3 direction;
 
 };

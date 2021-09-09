@@ -16,13 +16,19 @@ add_executable(
         RayTracing
         WIN32
         src/main.cpp
-        src/settings.h
-        src/pixel.h
-        src/camera.h
+        src/settings/settings.h
+        src/structs/pixel.h
+        src/settings/camera.h
         src/renderer.h
         src/renderer.cpp
         src/ray.h
         src/ray.cpp
+        src/objects/hittable.h
+        src/objects/hittable_list.h
+        src/objects/hittable_list.cpp
+        src/objects/sphere.h
+        src/objects/sphere.cpp
+        src/structs/hit_record.h
 )
 
 target_link_libraries(RayTracing SDL2.lib)
