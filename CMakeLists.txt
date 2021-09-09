@@ -18,6 +18,7 @@ add_executable(
         src/main.cpp
         src/settings.h
         src/pixel.h
+        src/camera.h
         src/renderer.h
         src/renderer.cpp
         src/ray.h
