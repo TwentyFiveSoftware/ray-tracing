@@ -1,10 +1,16 @@
 #include "renderer.h"
 #include "utils.h"
 
-glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world) {
+glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t depth) {
     HitRecord record = {};
+
+    if (depth >= Settings::MAX_DEPTH) {
+        return {0.0f, 0.0f, 0.0f};
+    }
+
     if (world.hit(ray, 0, INFINITY, record)) {
-        return 0.5f * (record.normal + 1.0f);
+        Ray diffusedRay(record.pos, record.normal + getRandomPointInUnitSphere());
+        return 0.5f * calculateRayColor(diffusedRay, world, depth + 1);
     }
 
     // background: linear interpolation between white and blue based on normalized y coordinate of direction vector
@@ -24,7 +30,7 @@ void writeColor(uint16_t x, uint16_t y, glm::vec3 color, unsigned char* pixels) 
 }
 
 void renderThreadEntryPoint(uint16_t startY, uint16_t endY, unsigned char* pixels,
-                            std::atomic <uint32_t>* pixelsRendered, const HittableList &world, const Camera &camera) {
+                            std::atomic<uint32_t>* pixelsRendered, const HittableList &world, const Camera &camera) {
 
     for (uint16_t y = startY; y < endY; y++) {
         for (uint16_t x = 0; x < Settings::WIDTH; x++) {
@@ -34,7 +40,7 @@ void renderThreadEntryPoint(uint16_t startY, uint16_t endY, unsigned char* pixel
                 float u = (float(x) + randomFloat()) / Settings::WIDTH;
                 float v = (float(y) + randomFloat()) / Settings::HEIGHT;
 
-                pixelColor += calculateRayColor(camera.getRay(u, v), world);
+                pixelColor += calculateRayColor(camera.getRay(u, v), world, 0);
             }
 
             pixelColor /= Settings::SAMPLES_PER_PIXEL;

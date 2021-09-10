@@ -10,4 +10,5 @@ struct Settings {
     static const uint16_t RENDER_THREAD_COUNT = 24;
 
     static const uint16_t SAMPLES_PER_PIXEL = 4;
+    static const uint16_t MAX_DEPTH = 8;
 };
