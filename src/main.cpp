@@ -9,6 +9,9 @@
 #include "objects/sphere.h"
 #include "objects/hittable_list.h"
 #include "renderer.h"
+#include "material/material.h"
+#include "material/material_diffuse.h"
+#include "material/material_metal.h"
 
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -72,10 +75,18 @@ int WinMain() {
         pixels[i] = 0x00;
     }
 
+    // MATERIALS
+    auto materialGround = std::make_shared<MaterialDiffuse>(glm::vec3(0.8f, 0.8f, 0.0f));
+    auto materialCenter = std::make_shared<MaterialDiffuse>(glm::vec3(0.7f, 0.3f, 0.3f));
+    auto materialLeft = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.8f, 0.8f));
+    auto materialRight = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.6f, 0.2f));
+
     // WORLD
     HittableList world;
-    world.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f));
-    world.add(std::make_shared<Sphere>(glm::vec3(0.0f, -100.5f, 1.0f), 100.0f));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.0f, -100.5f, 1.0f), 100.0f, materialGround));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f, materialCenter));
+    world.add(std::make_shared<Sphere>(glm::vec3(-1.25f, 0.0f, 1.0f), 0.5f, materialLeft));
+    world.add(std::make_shared<Sphere>(glm::vec3(1.0f, 0.5f, 1.0f), 0.3f, materialRight));
 
     // CAMERA
     Camera camera;

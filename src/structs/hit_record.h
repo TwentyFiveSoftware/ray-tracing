@@ -2,10 +2,12 @@
 
 #include <glm/glm.hpp>
 #include "../ray.h"
+#include "../material/material.h"
 
 struct HitRecord {
     glm::vec3 pos;
     glm::vec3 normal;
+    std::shared_ptr<Material> materialPtr;
     float t;
     bool frontFace;
 

@@ -1,9 +1,11 @@
 #include "sphere.h"
 
+#include <utility>
+
 Sphere::Sphere() : center(), radius() {}
 
-Sphere::Sphere(glm::vec3 center, float radius) :
-        center(center), radius(radius) {}
+Sphere::Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material) :
+        center(center), radius(radius), materialPtr(std::move(material)) {}
 
 bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &record) const {
     glm::vec3 co = ray.getOrigin() - center;
@@ -29,6 +31,7 @@ bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &record) cons
 
     glm::vec3 outwardNormal = (record.pos - center) / radius;
     record.setFaceNormal(ray, outwardNormal);
+    record.materialPtr = materialPtr;
 
     return true;
 }

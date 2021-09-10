@@ -30,3 +30,12 @@ glm::vec3 getRandomPointInUnitSphere() {
 glm::vec3 getRandomUnitVector() {
     return glm::normalize(getRandomPointInUnitSphere());
 }
+
+bool isVectorNearZero(const glm::vec3 &vector) {
+    const float s = 1e-8;
+    return std::fabs(vector.x) < s && std::fabs(vector.y) < s && std::fabs(vector.z) < s;
+}
+
+glm::vec3 reflectVector(const glm::vec3 &vector, const glm::vec3 &normal) {
+    return vector - 2 * glm::dot(vector, normal) * normal;
+}

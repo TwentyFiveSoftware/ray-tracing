@@ -30,10 +30,16 @@ add_executable(
         src/objects/sphere.cpp
         src/structs/hit_record.h
         src/structs/thread_info.h
+        src/structs/scatter_info.h
         src/utils.h
         src/utils.cpp
         src/camera.h
         src/camera.cpp
+        src/material/material.h
+        src/material/material_diffuse.h
+        src/material/material_diffuse.cpp
+        src/material/material_metal.h
+        src/material/material_metal.cpp
 )
 
 target_link_libraries(RayTracing SDL2.lib)
