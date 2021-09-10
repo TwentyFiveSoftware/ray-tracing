@@ -76,10 +76,10 @@ int WinMain() {
     }
 
     // MATERIALS
-    auto materialGround = std::make_shared<MaterialDiffuse>(glm::vec3(0.8f, 0.8f, 0.0f));
+    auto materialGround = std::make_shared<MaterialDiffuse>(glm::vec3(0.55f, 0.7f, 0.15f));
     auto materialCenter = std::make_shared<MaterialDiffuse>(glm::vec3(0.7f, 0.3f, 0.3f));
-    auto materialLeft = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.8f, 0.8f));
-    auto materialRight = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.6f, 0.2f));
+    auto materialLeft = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.8f, 0.8f), 0.3f);
+    auto materialRight = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.6f, 0.2f), 1.0f);
 
     // WORLD
     HittableList world;
