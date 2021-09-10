@@ -9,8 +9,6 @@
 #include "objects/sphere.h"
 #include "objects/hittable_list.h"
 #include "renderer.h"
-#include "utils.h"
-#include "camera.h"
 
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -86,9 +84,16 @@ int WinMain() {
     auto renderBeginTime = std::chrono::steady_clock::now();
     std::optional<std::chrono::steady_clock::time_point> renderEndTime = std::nullopt;
 
+    ThreadInfo threadInfo = {
+            .pixels = pixels,
+            .nextPixelRowToRender = &nextPixelRowToRender,
+            .pixelsRendered = &pixelsRendered,
+            .world = world,
+            .camera = camera
+    };
+
     for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
-        renderThreads[i] = std::thread(renderThreadEntryPoint, &nextPixelRowToRender, pixels, &pixelsRendered,
-                                       world, camera);
+        renderThreads[i] = std::thread(renderThreadFunction, threadInfo);
     }
 
     // DISPLAY
@@ -118,6 +123,8 @@ int WinMain() {
     }
 
     // CLEANUP
+    nextPixelRowToRender = Settings::HEIGHT;
+
     for (std::thread &renderThread : renderThreads) {
         renderThread.join();
     }

@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "utils.h"
+#include "settings/settings.h"
 
 glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t depth) {
     HitRecord record = {};
@@ -30,10 +31,8 @@ void writeColor(uint16_t x, uint16_t y, glm::vec3 color, unsigned char* pixels) 
     pixels[index + 2] = static_cast<unsigned char>(color.z);
 }
 
-void renderThreadEntryPoint(std::atomic<uint16_t>* nextPixelRowToRender, unsigned char* pixels,
-                            std::atomic<uint32_t>* pixelsRendered, const HittableList &world, const Camera &camera) {
-
-    uint16_t y = (*nextPixelRowToRender)++;
+void renderThreadFunction(const ThreadInfo &threadInfo) {
+    uint16_t y = (*threadInfo.nextPixelRowToRender)++;
 
     while (y < Settings::HEIGHT) {
         for (uint16_t x = 0; x < Settings::WIDTH; x++) {
@@ -43,16 +42,16 @@ void renderThreadEntryPoint(std::atomic<uint16_t>* nextPixelRowToRender, unsigne
                 float u = (float(x) + randomFloat()) / Settings::WIDTH;
                 float v = (float(y) + randomFloat()) / Settings::HEIGHT;
 
-                pixelColor += calculateRayColor(camera.getRay(u, v), world, 0);
+                pixelColor += calculateRayColor(threadInfo.camera.getRay(u, v), threadInfo.world, 0);
             }
 
             pixelColor /= Settings::SAMPLES_PER_PIXEL;
 
-            writeColor(x, y, pixelColor, pixels);
+            writeColor(x, y, pixelColor, threadInfo.pixels);
         }
 
-        *pixelsRendered += Settings::WIDTH;
+        *threadInfo.pixelsRendered += Settings::WIDTH;
 
-        y = (*nextPixelRowToRender)++;
+        y = (*threadInfo.nextPixelRowToRender)++;
     }
 }

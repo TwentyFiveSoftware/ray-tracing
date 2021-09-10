@@ -18,7 +18,6 @@ add_executable(
         WIN32
         src/main.cpp
         src/settings/settings.h
-        src/structs/pixel.h
         src/settings/camera_settings.h
         src/renderer.h
         src/renderer.cpp
@@ -30,6 +29,7 @@ add_executable(
         src/objects/sphere.h
         src/objects/sphere.cpp
         src/structs/hit_record.h
+        src/structs/thread_info.h
         src/utils.h
         src/utils.cpp
         src/camera.h
