@@ -8,4 +8,6 @@ struct Settings {
 
     static const uint16_t FPS = 100;
     static const uint16_t RENDER_THREAD_COUNT = 4;
+
+    static const uint16_t SAMPLES_PER_PIXEL = 4;
 };

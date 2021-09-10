@@ -18,7 +18,7 @@ add_executable(
         src/main.cpp
         src/settings/settings.h
         src/structs/pixel.h
-        src/settings/camera.h
+        src/settings/camera_settings.h
         src/renderer.h
         src/renderer.cpp
         src/ray.h
@@ -29,6 +29,10 @@ add_executable(
         src/objects/sphere.h
         src/objects/sphere.cpp
         src/structs/hit_record.h
+        src/utils.h
+        src/utils.cpp
+        src/camera.h
+        src/camera.cpp
 )
 
 target_link_libraries(RayTracing SDL2.lib)

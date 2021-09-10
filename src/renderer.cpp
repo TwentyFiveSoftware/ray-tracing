@@ -1,5 +1,5 @@
 #include "renderer.h"
-#include "settings/camera.h"
+#include "utils.h"
 
 glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world) {
     HitRecord record = {};
@@ -15,20 +15,25 @@ glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world) {
 void renderThreadEntryPoint(uint16_t startY, uint16_t endY,
                             std::array<Pixel, Settings::WIDTH * Settings::HEIGHT>* pixels,
                             std::atomic<uint32_t>* pixelsRendered,
-                            const HittableList &world) {
+                            const HittableList &world,
+                            const Camera &camera) {
 
     for (uint16_t y = startY; y < endY; y++) {
         for (uint16_t x = 0; x < Settings::WIDTH; x++) {
-            float u = float(x) / Settings::WIDTH;
-            float v = float(y) / Settings::HEIGHT;
+            glm::vec3 pixelColor;
 
-            glm::vec3 direction = Camera::UPPER_LEFT_CORNER
-                                  + glm::vec3(Camera::VIEWPORT_WIDTH, 0.0f, 0.0f) * u
-                                  - glm::vec3(0.0f, Camera::VIEWPORT_HEIGHT, 0.0f) * v
-                                  - Camera::ORIGIN;
+            for (int sample = 0; sample < Settings::SAMPLES_PER_PIXEL; sample++) {
+                float u = (float(x) + randomFloat(0, 1)) / Settings::WIDTH;
+                float v = (float(y) + randomFloat(0, 1)) / Settings::HEIGHT;
 
-            Ray ray(Camera::ORIGIN, direction);
-            glm::vec3 pixelColor = calculateRayColor(ray, world);
+                pixelColor += calculateRayColor(camera.getRay(u, v), world);
+            }
+
+            pixelColor = glm::vec3(
+                    clamp(pixelColor.x / Settings::SAMPLES_PER_PIXEL, 0, 1),
+                    clamp(pixelColor.y / Settings::SAMPLES_PER_PIXEL, 0, 1),
+                    clamp(pixelColor.z / Settings::SAMPLES_PER_PIXEL, 0, 1)
+            );
 
             pixels->at(y * Settings::WIDTH + x) = {.pos = {x, y}, .color = pixelColor};
         }
