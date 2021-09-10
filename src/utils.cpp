@@ -26,3 +26,7 @@ glm::vec3 getRandomPointInUnitSphere() {
         return point;
     }
 }
+
+glm::vec3 getRandomUnitVector() {
+    return glm::normalize(getRandomPointInUnitSphere());
+}

@@ -9,3 +9,5 @@ float randomFloat();
 glm::vec3 randomVector(float min, float max);
 
 glm::vec3 getRandomPointInUnitSphere();
+
+glm::vec3 getRandomUnitVector();

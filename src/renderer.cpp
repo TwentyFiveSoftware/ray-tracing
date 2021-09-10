@@ -8,8 +8,8 @@ glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t dept
         return {0.0f, 0.0f, 0.0f};
     }
 
-    if (world.hit(ray, 0, INFINITY, record)) {
-        Ray diffusedRay(record.pos, record.normal + getRandomPointInUnitSphere());
+    if (world.hit(ray, 0.001, INFINITY, record)) {
+        Ray diffusedRay(record.pos, record.normal + getRandomUnitVector());
         return 0.5f * calculateRayColor(diffusedRay, world, depth + 1);
     }
 
@@ -19,6 +19,7 @@ glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t dept
 }
 
 void writeColor(uint16_t x, uint16_t y, glm::vec3 color, unsigned char* pixels) {
+    color = glm::sqrt(color);
     color = glm::clamp(color, 0.0f, 1.0f);
     color *= 0xFF;
 
