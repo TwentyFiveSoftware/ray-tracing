@@ -8,6 +8,6 @@ float randomFloat(float min, float max) {
     return distribution(engine);
 }
 
-float clamp(float x, float min, float max) {
-    return std::min(std::max(x, min), max);
+float randomFloat() {
+    return randomFloat(0.0f, 1.0f);
 }

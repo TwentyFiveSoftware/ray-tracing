@@ -5,7 +5,6 @@
 #include <thread>
 #include <array>
 #include <iostream>
-#include "structs/pixel.h"
 #include "settings/settings.h"
 #include "objects/sphere.h"
 #include "objects/hittable_list.h"

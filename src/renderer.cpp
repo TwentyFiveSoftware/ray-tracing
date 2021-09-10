@@ -23,19 +23,16 @@ void writeColor(uint16_t x, uint16_t y, glm::vec3 color, unsigned char* pixels) 
     pixels[index + 2] = static_cast<unsigned char>(color.z);
 }
 
-void renderThreadEntryPoint(uint16_t startY, uint16_t endY,
-                            unsigned char* pixels,
-                            std::atomic<uint32_t>* pixelsRendered,
-                            const HittableList &world,
-                            const Camera &camera) {
+void renderThreadEntryPoint(uint16_t startY, uint16_t endY, unsigned char* pixels,
+                            std::atomic <uint32_t>* pixelsRendered, const HittableList &world, const Camera &camera) {
 
     for (uint16_t y = startY; y < endY; y++) {
         for (uint16_t x = 0; x < Settings::WIDTH; x++) {
             glm::vec3 pixelColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
             for (uint16_t sample = 0; sample < Settings::SAMPLES_PER_PIXEL; sample++) {
-                float u = (float(x) + randomFloat(0, 1)) / Settings::WIDTH;
-                float v = (float(y) + randomFloat(0, 1)) / Settings::HEIGHT;
+                float u = (float(x) + randomFloat()) / Settings::WIDTH;
+                float v = (float(y) + randomFloat()) / Settings::HEIGHT;
 
                 pixelColor += calculateRayColor(camera.getRay(u, v), world);
             }
