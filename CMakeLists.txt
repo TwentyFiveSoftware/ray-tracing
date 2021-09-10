@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(
         lib/glm
         lib/SDL2-2.0.16/include
+        lib/stb
 )
 
 link_directories(

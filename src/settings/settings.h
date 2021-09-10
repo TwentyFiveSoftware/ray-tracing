@@ -7,7 +7,7 @@ struct Settings {
     static const uint16_t HEIGHT = static_cast<uint16_t>(WIDTH / ASPECT_RATIO);
 
     static const uint16_t FPS = 100;
-    static const uint16_t RENDER_THREAD_COUNT = 4;
+    static const uint16_t RENDER_THREAD_COUNT = 24;
 
     static const uint16_t SAMPLES_PER_PIXEL = 4;
 };

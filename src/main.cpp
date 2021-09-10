@@ -1,4 +1,7 @@
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
 #include <SDL.h>
+#include <stb_image_write.h>
 #include <thread>
 #include <array>
 #include <iostream>
@@ -42,22 +45,34 @@ void cleanup() {
 }
 
 
-std::array<std::thread, Settings::RENDER_THREAD_COUNT> renderThreads;
-std::array<Pixel, Settings::WIDTH * Settings::HEIGHT> pixels;
+unsigned char* pixels = new unsigned char[Settings::WIDTH * Settings::HEIGHT * 3];
 std::atomic<uint32_t> pixelsRendered = {0};
 
 void renderPixelsToScreen() {
-    for (const Pixel &pixel : pixels) {
-        glm::vec3 color = pixel.color * 255.0f;
-        SDL_SetRenderDrawColor(renderer, static_cast<uint8_t>(color.x), static_cast<uint8_t>(color.y),
-                               static_cast<uint8_t>(color.z), 255);
-        SDL_RenderDrawPoint(renderer, pixel.pos.x, pixel.pos.y);
+    for (uint16_t y = 0; y < Settings::HEIGHT; y++) {
+        for (uint16_t x = 0; x < Settings::WIDTH; x++) {
+            int index = (y * Settings::WIDTH + x) * 3;
+
+            SDL_SetRenderDrawColor(renderer, pixels[index + 0], pixels[index + 1], pixels[index + 2], 0xFF);
+            SDL_RenderDrawPoint(renderer, x, y);
+        }
     }
 }
+
+void saveImage() {
+    stbi_write_png("render.png", Settings::WIDTH, Settings::HEIGHT, 3, pixels, Settings::WIDTH * 3);
+}
+
+
+std::array<std::thread, Settings::RENDER_THREAD_COUNT> renderThreads;
 
 int WinMain() {
     // INIT
     initSDL();
+
+    for (int i = 0; i < Settings::WIDTH * Settings::HEIGHT * 3; i++) {
+        pixels[i] = 0x00;
+    }
 
     // WORLD
     HittableList world;
@@ -67,7 +82,7 @@ int WinMain() {
     // CAMERA
     Camera camera;
 
-    // RENDERING
+    // RENDER THREADS
     auto renderBeginTime = std::chrono::steady_clock::now();
     std::optional<std::chrono::steady_clock::time_point> renderEndTime = std::nullopt;
 
@@ -75,25 +90,26 @@ int WinMain() {
     for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
         auto startY = static_cast<uint16_t>(std::fmin(i * rowsPerThread, Settings::HEIGHT));
         auto endY = static_cast<uint16_t>(std::fmin(i * rowsPerThread + rowsPerThread, Settings::HEIGHT));
-        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, &pixels, &pixelsRendered, world, camera);
+        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, pixels, &pixelsRendered, world, camera);
     }
 
+    // DISPLAY
     bool shouldClose = false;
 
     while (!shouldClose) {
         shouldClose = handleInput();
 
         if (!renderEndTime) {
-            if (pixelsRendered == pixels.size()) {
+            if (pixelsRendered == Settings::WIDTH * Settings::HEIGHT) {
                 renderEndTime = std::chrono::steady_clock::now();
                 std::cout << "Rendered in "
                           << std::chrono::duration_cast<std::chrono::milliseconds>(
                                   renderEndTime.value() - renderBeginTime).count()
                           << "ms" << std::endl;
+
+                saveImage();
             }
 
-//            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-//            SDL_RenderClear(renderer);
 
             renderPixelsToScreen();
 
@@ -103,10 +119,12 @@ int WinMain() {
         SDL_Delay(1000 / Settings::FPS);
     }
 
-
+    // CLEANUP
     for (std::thread &renderThread : renderThreads) {
         renderThread.join();
     }
+
+    delete[] pixels;
 
     cleanup();
 
