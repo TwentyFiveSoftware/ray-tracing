@@ -5,8 +5,9 @@
 
 struct ThreadInfo {
     unsigned char* pixels;
-    std::atomic <uint16_t>* nextPixelRowToRender;
-    std::atomic <uint32_t>* pixelsRendered;
+    glm::vec3* summedSampleDataPerPixel;
+    std::atomic<uint16_t>* nextPixelRowToRender;
+    uint16_t* currentPixelSample;
     const HittableList &world;
     const Camera &camera;
 };

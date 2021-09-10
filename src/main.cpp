@@ -3,13 +3,14 @@
 #include <SDL.h>
 #include <stb_image_write.h>
 #include <thread>
+#include <future>
+#include <chrono>
 #include <array>
 #include <iostream>
 #include "settings/settings.h"
 #include "objects/sphere.h"
 #include "objects/hittable_list.h"
 #include "renderer.h"
-#include "material/material.h"
 #include "material/material_diffuse.h"
 #include "material/material_metal.h"
 
@@ -46,7 +47,7 @@ void cleanup() {
 
 
 unsigned char* pixels = new unsigned char[Settings::WIDTH * Settings::HEIGHT * 3];
-std::atomic<uint32_t> pixelsRendered = {0};
+glm::vec3* summedSampleDataPerPixel = new glm::vec3[Settings::WIDTH * Settings::HEIGHT];
 
 void renderPixelsToScreen() {
     for (uint16_t y = 0; y < Settings::HEIGHT; y++) {
@@ -64,7 +65,7 @@ void saveImage() {
 }
 
 
-std::array<std::thread, Settings::RENDER_THREAD_COUNT> renderThreads;
+std::array<std::future<void>, Settings::RENDER_THREAD_COUNT> renderThreads;
 std::atomic<uint16_t> nextPixelRowToRender = {0};
 
 int WinMain() {
@@ -73,6 +74,10 @@ int WinMain() {
 
     for (int i = 0; i < Settings::WIDTH * Settings::HEIGHT * 3; i++) {
         pixels[i] = 0x00;
+    }
+
+    for (int i = 0; i < Settings::WIDTH * Settings::HEIGHT; i++) {
+        summedSampleDataPerPixel[i] = glm::vec3(0.0f, 0.0f, 0.0f);
     }
 
     // MATERIALS
@@ -95,16 +100,19 @@ int WinMain() {
     auto renderBeginTime = std::chrono::steady_clock::now();
     std::optional<std::chrono::steady_clock::time_point> renderEndTime = std::nullopt;
 
+    uint16_t currentPixelSample = 1;
+
     ThreadInfo threadInfo = {
             .pixels = pixels,
+            .summedSampleDataPerPixel = summedSampleDataPerPixel,
             .nextPixelRowToRender = &nextPixelRowToRender,
-            .pixelsRendered = &pixelsRendered,
+            .currentPixelSample = &currentPixelSample,
             .world = world,
             .camera = camera
     };
 
     for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
-        renderThreads[i] = std::thread(renderThreadFunction, threadInfo);
+        renderThreads[i] = std::async(std::launch::async, renderThreadFunction, threadInfo);
     }
 
     // DISPLAY
@@ -114,7 +122,33 @@ int WinMain() {
         shouldClose = handleInput();
 
         if (!renderEndTime) {
-            if (pixelsRendered == Settings::WIDTH * Settings::HEIGHT) {
+            // THREADS
+            bool allThreadsFinished = true;
+            for (std::future<void> &renderThread : renderThreads) {
+                auto status = renderThread.wait_for(std::chrono::milliseconds(0));
+                if (status != std::future_status::ready) {
+                    allThreadsFinished = false;
+                    break;
+                }
+            }
+
+            if (allThreadsFinished) {
+                std::cout << "Sample " << currentPixelSample << " / " << Settings::SAMPLES_PER_PIXEL
+                          << " rendered" << std::endl;
+
+                currentPixelSample++;
+                nextPixelRowToRender = 0;
+
+                if (currentPixelSample <= Settings::SAMPLES_PER_PIXEL) {
+                    for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
+                        renderThreads[i] = std::async(std::launch::async, renderThreadFunction, threadInfo);
+                    }
+                }
+            }
+
+
+            // END PRESENTING
+            if (currentPixelSample > Settings::SAMPLES_PER_PIXEL) {
                 renderEndTime = std::chrono::steady_clock::now();
                 std::cout << "Rendered in "
                           << std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -125,6 +159,7 @@ int WinMain() {
             }
 
 
+            // PRESENTING
             renderPixelsToScreen();
 
             SDL_RenderPresent(renderer);
@@ -136,11 +171,12 @@ int WinMain() {
     // CLEANUP
     nextPixelRowToRender = Settings::HEIGHT;
 
-    for (std::thread &renderThread : renderThreads) {
-        renderThread.join();
+    for (std::future<void> &renderThread : renderThreads) {
+        renderThread.get();
     }
 
     delete[] pixels;
+    delete[] summedSampleDataPerPixel;
 
     cleanup();
 

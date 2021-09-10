@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include "utils.h"
 #include "settings/settings.h"
+#include <iostream>
 
 glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t depth) {
     HitRecord record = {};
@@ -41,21 +42,18 @@ void renderThreadFunction(const ThreadInfo &threadInfo) {
 
     while (y < Settings::HEIGHT) {
         for (uint16_t x = 0; x < Settings::WIDTH; x++) {
-            glm::vec3 pixelColor = glm::vec3(0.0f, 0.0f, 0.0f);
+            float u = (float(x) + randomFloat()) / Settings::WIDTH;
+            float v = (float(y) + randomFloat()) / Settings::HEIGHT;
 
-            for (uint16_t sample = 0; sample < Settings::SAMPLES_PER_PIXEL; sample++) {
-                float u = (float(x) + randomFloat()) / Settings::WIDTH;
-                float v = (float(y) + randomFloat()) / Settings::HEIGHT;
+            threadInfo.summedSampleDataPerPixel[y * Settings::WIDTH + x] +=
+                    calculateRayColor(threadInfo.camera.getRay(u, v), threadInfo.world, 0);
 
-                pixelColor += calculateRayColor(threadInfo.camera.getRay(u, v), threadInfo.world, 0);
-            }
-
-            pixelColor /= Settings::SAMPLES_PER_PIXEL;
+            glm::vec3 pixelColor =
+                    threadInfo.summedSampleDataPerPixel[y * Settings::WIDTH + x] /
+                    float(*threadInfo.currentPixelSample);
 
             writeColor(x, y, pixelColor, threadInfo.pixels);
         }
-
-        *threadInfo.pixelsRendered += Settings::WIDTH;
 
         y = (*threadInfo.nextPixelRowToRender)++;
     }
