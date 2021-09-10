@@ -64,6 +64,7 @@ void saveImage() {
 
 
 std::array<std::thread, Settings::RENDER_THREAD_COUNT> renderThreads;
+std::atomic<uint16_t> nextPixelRowToRender = {0};
 
 int WinMain() {
     // INIT
@@ -85,11 +86,9 @@ int WinMain() {
     auto renderBeginTime = std::chrono::steady_clock::now();
     std::optional<std::chrono::steady_clock::time_point> renderEndTime = std::nullopt;
 
-    auto rowsPerThread = static_cast<uint16_t>(ceil(float(Settings::HEIGHT) / Settings::RENDER_THREAD_COUNT));
     for (int i = 0; i < Settings::RENDER_THREAD_COUNT; i++) {
-        auto startY = static_cast<uint16_t>(std::fmin(i * rowsPerThread, Settings::HEIGHT));
-        auto endY = static_cast<uint16_t>(std::fmin(i * rowsPerThread + rowsPerThread, Settings::HEIGHT));
-        renderThreads[i] = std::thread(renderThreadEntryPoint, startY, endY, pixels, &pixelsRendered, world, camera);
+        renderThreads[i] = std::thread(renderThreadEntryPoint, &nextPixelRowToRender, pixels, &pixelsRendered,
+                                       world, camera);
     }
 
     // DISPLAY

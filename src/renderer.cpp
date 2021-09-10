@@ -30,10 +30,12 @@ void writeColor(uint16_t x, uint16_t y, glm::vec3 color, unsigned char* pixels) 
     pixels[index + 2] = static_cast<unsigned char>(color.z);
 }
 
-void renderThreadEntryPoint(uint16_t startY, uint16_t endY, unsigned char* pixels,
+void renderThreadEntryPoint(std::atomic<uint16_t>* nextPixelRowToRender, unsigned char* pixels,
                             std::atomic<uint32_t>* pixelsRendered, const HittableList &world, const Camera &camera) {
 
-    for (uint16_t y = startY; y < endY; y++) {
+    uint16_t y = (*nextPixelRowToRender)++;
+
+    while (y < Settings::HEIGHT) {
         for (uint16_t x = 0; x < Settings::WIDTH; x++) {
             glm::vec3 pixelColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -50,5 +52,7 @@ void renderThreadEntryPoint(uint16_t startY, uint16_t endY, unsigned char* pixel
         }
 
         *pixelsRendered += Settings::WIDTH;
+
+        y = (*nextPixelRowToRender)++;
     }
 }

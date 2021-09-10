@@ -6,5 +6,5 @@
 #include "objects/hittable_list.h"
 #include "camera.h"
 
-void renderThreadEntryPoint(uint16_t startY, uint16_t endY, unsigned char* pixels,
+void renderThreadEntryPoint(std::atomic<uint16_t>* nextPixelRowToRender, unsigned char* pixels,
                             std::atomic<uint32_t>* pixelsRendered, const HittableList &world, const Camera &camera);
