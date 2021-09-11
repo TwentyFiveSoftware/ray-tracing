@@ -9,6 +9,8 @@ public:
 
     static Scene createRandomScene();
 
+    static Scene createTestScene();
+
     [[nodiscard]] Camera getCamera() const;
 
     [[nodiscard]] HittableList getObjects() const;
