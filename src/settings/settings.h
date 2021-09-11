@@ -9,6 +9,8 @@ struct Settings {
     static const uint16_t FPS = 50;
     static const uint16_t RENDER_THREAD_COUNT = 22;
 
-    static const uint16_t SAMPLES_PER_PIXEL = 16;
+    static const uint16_t SAMPLES_PER_PIXEL = 4;
     static const uint16_t MAX_DEPTH = 32;
+
+    static const bool SAVE_IMAGE_AFTER_EACH_SAMPLE = false;
 };

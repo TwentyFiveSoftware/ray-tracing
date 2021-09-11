@@ -136,6 +136,9 @@ int WinMain() {
                 std::cout << "Sample " << currentPixelSample << " / " << Settings::SAMPLES_PER_PIXEL
                           << " rendered" << std::endl;
 
+                if (Settings::SAVE_IMAGE_AFTER_EACH_SAMPLE)
+                    saveImage();
+
                 currentPixelSample++;
                 nextPixelRowToRender = 0;
 
