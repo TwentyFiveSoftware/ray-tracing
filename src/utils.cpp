@@ -65,3 +65,18 @@ float reflectanceFactorApproximation(const glm::vec3 &vector, const glm::vec3 &n
     float r = std::pow((1.0f - refractionIndexRatio) / (1.0f + refractionIndexRatio), 2.0f);
     return r + (1.0f - r) * std::pow(1.0f - glm::dot(-vector, normal), 5.0f);
 }
+
+glm::vec3 getRandomPointInUnitDisk() {
+    while (true) {
+        glm::vec3 point = glm::vec3(
+                randomFloat(-1.0f, 1.0f),
+                randomFloat(-1.0f, 1.0f),
+                0.0f
+        );
+
+        if (glm::length(point) >= 1)
+            continue;
+
+        return point;
+    }
+}

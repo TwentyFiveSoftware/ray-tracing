@@ -23,3 +23,5 @@ glm::vec3 refractVector(const glm::vec3 &vector, const glm::vec3 &normal, float 
 bool canRefract(const glm::vec3 &vector, const glm::vec3 &normal, float refractiveIndexRatio);
 
 float reflectanceFactorApproximation(const glm::vec3 &vector, const glm::vec3 &normal, float refractionIndexRatio);
+
+glm::vec3 getRandomPointInUnitDisk();

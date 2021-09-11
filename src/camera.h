@@ -14,5 +14,7 @@ private:
     glm::vec3 upperLeftCorner;
     glm::vec3 horizontal;
     glm::vec3 vertical;
+    glm::vec3 right;
+    glm::vec3 up;
 
 };
