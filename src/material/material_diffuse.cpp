@@ -4,7 +4,8 @@
 MaterialDiffuse::MaterialDiffuse(const glm::vec3 &albedo) :
         albedo(albedo) {}
 
-ScatterInfo MaterialDiffuse::scatter(const Ray &ray, const glm::vec3 &pos, const glm::vec3 &normal) const {
+ScatterInfo MaterialDiffuse::scatter(const Ray &ray, const glm::vec3 &pos, const glm::vec3 &normal,
+                                     bool frontFace) const {
     glm::vec3 scatterDirection = normal + getRandomUnitVector();
 
     if (isVectorNearZero(scatterDirection))

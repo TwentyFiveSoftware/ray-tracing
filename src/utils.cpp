@@ -39,3 +39,23 @@ bool isVectorNearZero(const glm::vec3 &vector) {
 glm::vec3 reflectVector(const glm::vec3 &vector, const glm::vec3 &normal) {
     return vector - 2 * glm::dot(vector, normal) * normal;
 }
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
+glm::vec3 refractVector(const glm::vec3 &vector, const glm::vec3 &normal, float refractiveIndexRatio) {
+    float cosTheta = glm::dot(-vector, normal);
+    glm::vec3 A = refractiveIndexRatio * (vector + cosTheta * normal);
+    glm::vec3 B = -normal * std::sqrt(1 - refractiveIndexRatio * refractiveIndexRatio * (1 - cosTheta * cosTheta));
+    return A + B;
+}
+
+// check for total internal reflection -> no refraction
+bool canRefract(const glm::vec3 &vector, const glm::vec3 &normal, float refractiveIndexRatio) {
+    float cosTheta = glm::dot(-vector, normal);
+    float sinTheta = std::sqrt(1.0f - cosTheta * cosTheta);
+    return refractiveIndexRatio * sinTheta <= 1.0f;
+}
+
+float reflectanceFactorApproximation(const glm::vec3 &vector, const glm::vec3 &normal, float refractionIndexRatio) {
+    float r = std::pow((1.0f - refractionIndexRatio) / (1.0f + refractionIndexRatio), 2.0f);
+    return r + (1.0f - r) * std::pow(1.0f - glm::dot(-vector, normal), 5.0f);
+}

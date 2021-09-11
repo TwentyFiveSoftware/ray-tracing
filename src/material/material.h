@@ -4,6 +4,7 @@
 
 class Material {
 public:
-    [[nodiscard]] virtual ScatterInfo scatter(const Ray &ray, const glm::vec3 &pos, const glm::vec3 &normal) const = 0;
+    [[nodiscard]] virtual ScatterInfo scatter(const Ray &ray, const glm::vec3 &pos, const glm::vec3 &normal,
+                                              bool frontFace) const = 0;
 
 };

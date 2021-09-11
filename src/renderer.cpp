@@ -11,7 +11,7 @@ glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t dept
     }
 
     if (world.hit(ray, 0.001, INFINITY, record)) {
-        ScatterInfo scatterInfo = record.materialPtr->scatter(ray, record.pos, record.normal);
+        ScatterInfo scatterInfo = record.materialPtr->scatter(ray, record.pos, record.normal, record.frontFace);
 
         if (scatterInfo.doesScatter) {
             return scatterInfo.attenuation * calculateRayColor(scatterInfo.scatteredRay, world, depth + 1);
@@ -21,7 +21,7 @@ glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t dept
     }
 
     // background: linear interpolation between white and blue based on normalized y coordinate of direction vector
-    float t = 0.5f * (glm::normalize(ray.getDirection()).y + 1.0f);
+    float t = 0.5f * (ray.getNormalizedDirection().y + 1.0f);
     return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
 }
 

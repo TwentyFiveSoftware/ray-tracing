@@ -40,6 +40,8 @@ add_executable(
         src/material/material_diffuse.cpp
         src/material/material_metal.h
         src/material/material_metal.cpp
+        src/material/material_refractive.h
+        src/material/material_refractive.cpp
 )
 
 target_link_libraries(RayTracing SDL2.lib)

@@ -12,6 +12,8 @@ public:
 
     [[nodiscard]] glm::vec3 getDirection() const;
 
+    [[nodiscard]] glm::vec3 getNormalizedDirection() const;
+
     [[nodiscard]] glm::vec3 at(float t) const;
 
 private:

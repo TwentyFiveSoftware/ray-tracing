@@ -1,13 +1,13 @@
 #include "material.h"
 
-class MaterialDiffuse : public Material {
+class MaterialRefractive : public Material {
 public:
-    MaterialDiffuse(const glm::vec3 &albedo);
+    MaterialRefractive(float refractionIndex);
 
     [[nodiscard]] ScatterInfo scatter(const Ray &ray, const glm::vec3 &pos, const glm::vec3 &normal,
                                       bool frontFace) const override;
 
 private:
-    glm::vec3 albedo;
+    float refractionIndex;
 
 };

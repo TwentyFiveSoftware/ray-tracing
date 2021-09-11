@@ -15,3 +15,9 @@ glm::vec3 getRandomUnitVector();
 bool isVectorNearZero(const glm::vec3 &vector);
 
 glm::vec3 reflectVector(const glm::vec3 &vector, const glm::vec3 &normal);
+
+glm::vec3 refractVector(const glm::vec3 &vector, const glm::vec3 &normal, float refractiveIndexRatio);
+
+bool canRefract(const glm::vec3 &vector, const glm::vec3 &normal, float refractiveIndexRatio);
+
+float reflectanceFactorApproximation(const glm::vec3 &vector, const glm::vec3 &normal, float refractionIndexRatio);

@@ -13,6 +13,10 @@ glm::vec3 Ray::getDirection() const {
     return direction;
 }
 
+glm::vec3 Ray::getNormalizedDirection() const {
+    return glm::normalize(direction);
+}
+
 glm::vec3 Ray::at(float t) const {
     return origin + direction * t;
 }
