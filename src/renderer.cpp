@@ -3,18 +3,18 @@
 #include "settings/settings.h"
 #include <iostream>
 
-glm::vec3 calculateRayColor(const Ray &ray, const Hittable &world, uint16_t depth) {
+glm::vec3 calculateRayColor(const Ray &ray, const Hittable &objects, uint16_t depth) {
     HitRecord record = {};
 
     if (depth >= Settings::MAX_DEPTH) {
         return {0.0f, 0.0f, 0.0f};
     }
 
-    if (world.hit(ray, 0.001, INFINITY, record)) {
+    if (objects.hit(ray, 0.001, INFINITY, record)) {
         ScatterInfo scatterInfo = record.materialPtr->scatter(ray, record.pos, record.normal, record.frontFace);
 
         if (scatterInfo.doesScatter) {
-            return scatterInfo.attenuation * calculateRayColor(scatterInfo.scatteredRay, world, depth + 1);
+            return scatterInfo.attenuation * calculateRayColor(scatterInfo.scatteredRay, objects, depth + 1);
         }
 
         return {0.0f, 0.0f, 0.0f};
@@ -46,7 +46,7 @@ void renderThreadFunction(const ThreadInfo &threadInfo) {
             float v = (float(y) + randomFloat()) / Settings::HEIGHT;
 
             threadInfo.summedSampleDataPerPixel[y * Settings::WIDTH + x] +=
-                    calculateRayColor(threadInfo.camera.getRay(u, v), threadInfo.world, 0);
+                    calculateRayColor(threadInfo.scene.getCamera().getRay(u, v), threadInfo.scene.getObjects(), 0);
 
             glm::vec3 pixelColor =
                     threadInfo.summedSampleDataPerPixel[y * Settings::WIDTH + x] /

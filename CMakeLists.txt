@@ -35,6 +35,8 @@ add_executable(
         src/utils.cpp
         src/camera.h
         src/camera.cpp
+        src/scene.h
+        src/scene.cpp
         src/material/material.h
         src/material/material_diffuse.h
         src/material/material_diffuse.cpp
