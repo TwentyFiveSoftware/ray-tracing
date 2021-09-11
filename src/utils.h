@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+float degreesToRadians(float degrees);
+
 float randomFloat(float min, float max);
 
 float randomFloat();

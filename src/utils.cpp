@@ -1,6 +1,12 @@
 #include "utils.h"
 #include <random>
 
+const float PI = 3.1415926535897932385f;
+
+float degreesToRadians(float degrees) {
+    return degrees * PI / 180.0f;
+}
+
 float randomFloat(float min, float max) {
     std::random_device rd;
     std::mt19937 engine(rd());
