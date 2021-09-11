@@ -11,7 +11,8 @@ public:
 private:
     float viewportHeight;
     float viewportWidth;
-    glm::vec3 origin;
     glm::vec3 upperLeftCorner;
+    glm::vec3 horizontal;
+    glm::vec3 vertical;
 
 };
