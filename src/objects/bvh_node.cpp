@@ -1,7 +1,7 @@
 #include "bvh_node.h"
 #include <algorithm>
 #include <iostream>
-#include "../utils.h"
+#include "../utils/utils.h"
 
 inline bool compareBox(const std::shared_ptr<Hittable> &a, const std::shared_ptr<Hittable> &b, uint8_t axis) {
     AABB boxA, boxB;

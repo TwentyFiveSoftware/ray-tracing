@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "hittable.h"
-#include "../utils.h"
+#include "../utils/utils.h"
 
 class Sphere : public Hittable {
 public:

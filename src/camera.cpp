@@ -1,7 +1,7 @@
 #include "camera.h"
 #include "settings/camera_settings.h"
 #include "settings/settings.h"
-#include "utils.h"
+#include "utils/utils.h"
 
 Camera::Camera() :
         viewportHeight(std::tan(degreesToRadians(CameraSettings::FOV) / 2.0f) * 2.0f),

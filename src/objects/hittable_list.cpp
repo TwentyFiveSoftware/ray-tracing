@@ -1,5 +1,5 @@
 #include "hittable_list.h"
-#include "../utils.h"
+#include "../utils/utils.h"
 
 HittableList::HittableList() = default;
 

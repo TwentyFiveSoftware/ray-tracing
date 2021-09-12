@@ -1,5 +1,5 @@
 #include "material_metal.h"
-#include "../utils.h"
+#include "../utils/utils.h"
 
 MaterialMetal::MaterialMetal(const glm::vec3 &albedo, float fuzz) :
         albedo(albedo), fuzz(std::min(fuzz, 1.0f)) {}

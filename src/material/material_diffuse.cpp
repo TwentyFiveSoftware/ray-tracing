@@ -1,6 +1,6 @@
 #include "material_diffuse.h"
 #include <utility>
-#include "../utils.h"
+#include "../utils/utils.h"
 #include "../texture/texture_solid_color.h"
 
 MaterialDiffuse::MaterialDiffuse(const glm::vec3 &albedo) :

@@ -1,5 +1,5 @@
 #include "material_refractive.h"
-#include "../utils.h"
+#include "../utils/utils.h"
 
 MaterialRefractive::MaterialRefractive(float refractionIndex) :
         refractionIndex(refractionIndex) {}

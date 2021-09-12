@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "aabb.h"
+#include "../aabb.h"
 
 const float PI = 3.1415926535897932385f;
 

@@ -33,8 +33,8 @@ add_executable(
         src/structs/hit_record.h
         src/structs/thread_info.h
         src/structs/scatter_info.h
-        src/utils.h
-        src/utils.cpp
+        src/utils/utils.h
+        src/utils/utils.cpp
         src/camera.h
         src/camera.cpp
         src/scene.h

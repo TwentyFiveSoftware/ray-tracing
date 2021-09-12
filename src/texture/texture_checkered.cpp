@@ -1,7 +1,7 @@
 #include "texture_solid_color.h"
 #include "texture_checkered.h"
 #include <utility>
-#include "../utils.h"
+#include "../utils/utils.h"
 
 TextureCheckered::TextureCheckered(
         float size, std::shared_ptr<TextureSolidColor> evenTexture, std::shared_ptr<TextureSolidColor> oddTexture) :
