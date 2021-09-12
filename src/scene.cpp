@@ -12,6 +12,7 @@
 #include "texture/texture_image.h"
 #include "material/material_diffuse_light.h"
 #include "objects/translation.h"
+#include "objects/rotation_y.h"
 
 Scene::Scene(const HittableList &objects, const Camera &camera, const glm::vec3 &backgroundColor) :
         objects(BVHNode(objects)), camera(camera), backgroundColor(backgroundColor) {}
@@ -119,11 +120,13 @@ Scene Scene::createCornellBoxScene() {
 
     std::shared_ptr<Hittable> box1 = std::make_shared<Box>(
             glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 165.0f, 165.0f), white);
+    box1 = std::make_shared<RotationY>(box1, -18);
     box1 = std::make_shared<Translation>(box1, glm::vec3(265.0f, 0.0f, 65.0f));
     objects.add(box1);
 
     std::shared_ptr<Hittable> box2 = std::make_shared<Box>(
             glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 330.0f, 165.0f), white);
+    box2 = std::make_shared<RotationY>(box2, 15);
     box2 = std::make_shared<Translation>(box2, glm::vec3(130.0f, 0.0f, 295.0f));
     objects.add(box2);
 
