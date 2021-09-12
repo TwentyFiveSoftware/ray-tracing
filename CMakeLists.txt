@@ -33,8 +33,6 @@ add_executable(
         src/structs/hit_record.h
         src/structs/thread_info.h
         src/structs/scatter_info.h
-        src/utils/utils.h
-        src/utils/utils.cpp
         src/camera.h
         src/camera.cpp
         src/scene.h
@@ -45,6 +43,7 @@ add_executable(
         src/texture/texture_solid_color.h
         src/texture/texture_checkered.h
         src/texture/texture_checkered.cpp
+        src/texture/texture_noise.h
         src/material/material.h
         src/material/material_diffuse.h
         src/material/material_diffuse.cpp
@@ -52,6 +51,10 @@ add_executable(
         src/material/material_metal.cpp
         src/material/material_refractive.h
         src/material/material_refractive.cpp
+        src/utils/utils.h
+        src/utils/utils.cpp
+        src/utils/perlin.h
+        src/utils/perlin.cpp
 )
 
 target_link_libraries(RayTracing SDL2.lib)

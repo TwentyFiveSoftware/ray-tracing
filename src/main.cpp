@@ -77,7 +77,7 @@ int WinMain() {
     }
 
     // SCENE
-    Scene scene = Scene::createRandomScene();
+    Scene scene = Scene::createTestScene();
 
     // RENDER THREADS
     auto renderBeginTime = std::chrono::steady_clock::now();

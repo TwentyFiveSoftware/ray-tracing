@@ -4,6 +4,7 @@
 #include "material/material_refractive.h"
 #include "objects/sphere.h"
 #include "texture/texture_checkered.h"
+#include "texture/texture_noise.h"
 
 Scene::Scene(const HittableList &objects) :
         camera(Camera()),
@@ -57,7 +58,7 @@ Scene Scene::createRandomScene() {
 }
 
 Scene Scene::createTestScene() {
-    auto materialGround = std::make_shared<MaterialDiffuse>(glm::vec3(0.55f, 0.7f, 0.15f));
+    auto materialGround = std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(4.0f));
     auto materialLeft = std::make_shared<MaterialRefractive>(1.5f);
     auto materialCenter = std::make_shared<MaterialDiffuse>(glm::vec3(0.1f, 0.2f, 0.5f));
     auto materialRight = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.6f, 0.2f), 0.0f);
