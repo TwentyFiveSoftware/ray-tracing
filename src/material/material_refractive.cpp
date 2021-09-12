@@ -5,7 +5,7 @@ MaterialRefractive::MaterialRefractive(float refractionIndex) :
         refractionIndex(refractionIndex) {}
 
 ScatterInfo MaterialRefractive::scatter(const Ray &ray, const glm::vec3 &pos, const glm::vec3 &normal,
-                                        bool frontFace) const {
+                                        const glm::vec2 &uv, bool frontFace) const {
     float refractionIndexRatio = frontFace ? (1.0f / refractionIndex) : refractionIndex;
     glm::vec3 scatteredRayDirection;
 

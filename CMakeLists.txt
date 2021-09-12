@@ -41,6 +41,9 @@ add_executable(
         src/scene.cpp
         src/aabb.h
         src/aabb.cpp
+        src/texture/texture.h
+        src/texture/texture_solid_color.h
+        src/texture/texture_solid_color.cpp
         src/material/material.h
         src/material/material_diffuse.h
         src/material/material_diffuse.cpp

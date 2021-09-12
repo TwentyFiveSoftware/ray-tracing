@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include "aabb.h"
 
+const float PI = 3.1415926535897932385f;
+
 float degreesToRadians(float degrees);
 
 float randomFloat(float min, float max);

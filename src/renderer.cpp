@@ -11,7 +11,8 @@ glm::vec3 calculateRayColor(const Ray &ray, const Hittable &objects, uint16_t de
     }
 
     if (objects.hit(ray, 0.001, INFINITY, record)) {
-        ScatterInfo scatterInfo = record.materialPtr->scatter(ray, record.pos, record.normal, record.frontFace);
+        ScatterInfo scatterInfo = record.materialPtr->scatter(
+                ray, record.pos, record.normal, record.uv, record.frontFace);
 
         if (scatterInfo.doesScatter) {
             return scatterInfo.attenuation * calculateRayColor(scatterInfo.scatteredRay, objects, depth + 1);

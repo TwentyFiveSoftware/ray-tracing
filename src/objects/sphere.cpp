@@ -32,6 +32,7 @@ bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &record) cons
     glm::vec3 outwardNormal = (record.pos - center) / radius;
     record.setFaceNormal(ray, outwardNormal);
     record.materialPtr = materialPtr;
+    record.uv = getSphereUV(outwardNormal);
 
     return true;
 }
@@ -43,4 +44,13 @@ bool Sphere::boundingBox(AABB &outputBox) const {
     );
 
     return true;
+}
+
+glm::vec2 Sphere::getSphereUV(const glm::vec3 &point) {
+    auto phi = std::atan2(point.z, point.x) + PI;
+    auto theta = std::acos(point.y);
+
+    float u = phi / (2 * PI);
+    float v = theta / PI;
+    return {u, v};
 }
