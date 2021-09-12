@@ -1,5 +1,5 @@
 #include "camera.h"
-#include "settings/settings.h"
+#include "settings.h"
 #include "utils/utils.h"
 
 Camera::Camera(CameraSettings cameraSettings) :

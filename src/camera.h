@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ray.h"
-#include "settings/camera_settings.h"
+#include "structs/camera_settings.h"
 
 class Camera {
 public:

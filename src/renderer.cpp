@@ -1,6 +1,6 @@
 #include "renderer.h"
 #include "utils/utils.h"
-#include "settings/settings.h"
+#include "settings.h"
 #include <iostream>
 
 glm::vec3 calculateRayColor(const Ray &ray, const glm::vec3 &backgroundColor, const Hittable &objects, uint16_t depth) {

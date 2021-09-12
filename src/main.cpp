@@ -6,7 +6,7 @@
 #include <chrono>
 #include <array>
 #include <iostream>
-#include "settings/settings.h"
+#include "settings.h"
 #include "renderer.h"
 #include "scene.h"
 
@@ -77,7 +77,7 @@ int WinMain() {
     }
 
     // SCENE
-    Scene scene = Scene::createCornellBoxScene();
+    Scene scene = Scene::createComplexScene();
 
     // RENDER THREADS
     auto renderBeginTime = std::chrono::steady_clock::now();

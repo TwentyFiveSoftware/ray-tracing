@@ -17,8 +17,8 @@ add_executable(
         RayTracing
         WIN32
         src/main.cpp
-        src/settings/settings.h
-        src/settings/camera_settings.h
+        src/settings.h
+        src/structs/camera_settings.h
         src/renderer.h
         src/renderer.cpp
         src/ray.h

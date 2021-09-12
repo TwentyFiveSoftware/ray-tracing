@@ -18,6 +18,18 @@
 Scene::Scene(const HittableList &objects, const Camera &camera, const glm::vec3 &backgroundColor) :
         objects(BVHNode(objects)), camera(camera), backgroundColor(backgroundColor) {}
 
+Camera Scene::getCamera() const {
+    return camera;
+}
+
+BVHNode Scene::getObjects() const {
+    return objects;
+}
+
+glm::vec3 Scene::getBackgroundColor() const {
+    return backgroundColor;
+}
+
 Scene Scene::createRandomScene() {
     HittableList objects;
 
@@ -146,14 +158,92 @@ Scene Scene::createCornellBoxScene() {
     return Scene(objects, camera, backgroundColor);
 }
 
-Camera Scene::getCamera() const {
-    return camera;
-}
 
-BVHNode Scene::getObjects() const {
-    return objects;
-}
+Scene Scene::createComplexScene() {
+    HittableList objects;
 
-glm::vec3 Scene::getBackgroundColor() const {
-    return backgroundColor;
+    // GROUND
+    HittableList boxes;
+    const auto materialGround = std::make_shared<MaterialDiffuse>(glm::vec3(0.48f, 0.83f, 0.53f));
+
+    const uint16_t boxesPerSide = 20;
+    const float boxSize = 100.0f;
+
+    for (uint16_t i = 0; i < boxesPerSide; i++) {
+        for (uint16_t j = 0; j < boxesPerSide; j++) {
+            const float x = -1000.0f + float(i) * boxSize;
+            const float z = -1000.0f + float(j) * boxSize;
+
+            boxes.add(std::make_shared<Box>(
+                    glm::vec3(x, 0.0f, z),
+                    glm::vec3(x + boxSize, randomFloat(1.0f, 101.0f), z + boxSize),
+                    materialGround
+            ));
+        }
+    }
+
+    objects.add(std::make_shared<BVHNode>(boxes));
+
+    // LIGHT
+    const auto lightMaterial = std::make_shared<MaterialDiffuseLight>(glm::vec3(7.0f, 7.0f, 7.0f));
+    objects.add(std::make_shared<RectangleXZ>(123.0f, 423.0f, 147.0f, 412.0f, 554.0f, lightMaterial));
+
+    // DIFFUSE SPHERE
+    const auto diffuseMaterial = std::make_shared<MaterialDiffuse>(glm::vec3(0.7f, 0.3f, 0.1f));
+    objects.add(std::make_shared<Sphere>(glm::vec3(400.0f, 400.0f, 200.0f), 50.0f, diffuseMaterial));
+
+    // REFRACTIVE SPHERE
+    const auto refractiveMaterial = std::make_shared<MaterialRefractive>(1.5f);
+    objects.add(std::make_shared<Sphere>(glm::vec3(260.0f, 150.0f, 45.0f), 50.0f, refractiveMaterial));
+
+    // FUZZY METAL SPHERE
+    const auto fuzzyMetalMaterial = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.8f, 0.9f), 1.0f);
+    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 150.0f, 145.0f), 50.0f, fuzzyMetalMaterial));
+
+    // SUBSURFACE REFLECTION SPHERE
+    const auto ssrSphere = std::make_shared<Sphere>(glm::vec3(360.0f, 150.0f, 145.0f), 70.0f, refractiveMaterial);
+    objects.add(ssrSphere);
+    objects.add(std::make_shared<ConstantMedium>(ssrSphere, 0.2f, glm::vec3(0.2f, 0.4f, 0.9f)));
+
+//    // SCENE FOG
+//    const auto fogSphere = std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 0.0f), 500.0f, refractiveMaterial);
+//    objects.add(std::make_shared<ConstantMedium>(fogSphere, 0.1f, glm::vec3(1.0f, 1.0f, 1.0f)));
+
+    // TEXTURE SPHERE
+    const auto textureMaterial = std::make_shared<MaterialDiffuse>(std::make_shared<TextureImage>("earthmap.jpg"));
+    objects.add(std::make_shared<Sphere>(glm::vec3(400.0f, 200.0f, 400.0f), 100.0f, textureMaterial));
+
+    // NOISE TEXTURED SPHERE
+    const auto noiseMaterial = std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(0.1f));
+    objects.add(std::make_shared<Sphere>(glm::vec3(220.0f, 280.0f, 300.0f), 80.0f, noiseMaterial));
+
+    // SPHERE COLLECTION
+    HittableList sphereCollection;
+
+    const uint16_t sphereAmount = 250;
+    const auto whiteMaterial = std::make_shared<MaterialDiffuse>(glm::vec3(0.73f, 0.73f, 0.73f));
+
+    for (uint16_t i = 0; i < sphereAmount; i++) {
+        sphereCollection.add(std::make_shared<Sphere>(getRandomUnitVector() * 100.0f, 10.0f, whiteMaterial));
+    }
+
+    objects.add(std::make_shared<Translation>(
+            std::make_shared<RotationY>(
+                    std::make_shared<BVHNode>(sphereCollection), 15.0f
+            ),
+            glm::vec3(-100.0f, 270.0f, 395.0f)
+    ));
+
+
+    //
+    Camera camera(
+            {
+                    .fov = 40.0f,
+                    .lookFrom = glm::vec3(478.0f, 278.0f, -600.0f),
+                    .lookAt = glm::vec3(278.0f, 278.0f, 0.0f)
+            });
+
+    glm::vec3 backgroundColor = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    return Scene(objects, camera, backgroundColor);
 }
