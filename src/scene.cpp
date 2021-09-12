@@ -3,6 +3,7 @@
 #include "material/material_metal.h"
 #include "material/material_refractive.h"
 #include "objects/sphere.h"
+#include "objects/aa_rect.h"
 #include "texture/texture_checkered.h"
 #include "texture/texture_noise.h"
 #include "texture/texture_image.h"
@@ -83,7 +84,8 @@ Scene Scene::createTestScene() {
     objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, material1));
 
     auto material2 = std::make_shared<MaterialDiffuseLight>(glm::vec3(4.0f, 4.0f, 4.0f));
-    objects.add(std::make_shared<Sphere>(glm::vec3(3.5f, 3.0f, 3.0f), 2.0f, material2));
+    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 5.0f, 0.0f), 1.5f, material2));
+    objects.add(std::make_shared<AxisAlignedRectangle>(2.0f, 4.0f, -1.5f, 1.0f, 2.0f, material2));
 
     glm::vec3 backgroundColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
