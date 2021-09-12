@@ -1,13 +1,12 @@
-#include "y_aa_rect.h"
+#include "rect_xz.h"
 
-YAxisAlignedRectangle::YAxisAlignedRectangle() :
+RectangleXZ::RectangleXZ() :
         x0(), x1(), z0(), z1(), y() {}
 
-YAxisAlignedRectangle::YAxisAlignedRectangle(float x0, float x1, float z0, float z1, float y,
-                                             std::shared_ptr<Material> material) :
+RectangleXZ::RectangleXZ(float x0, float x1, float z0, float z1, float y, std::shared_ptr<Material> material) :
         x0(x0), x1(x1), z0(z0), z1(z1), y(y), materialPtr(std::move(material)) {}
 
-bool YAxisAlignedRectangle::hit(const Ray &ray, float tMin, float tMax, HitRecord &record) const {
+bool RectangleXZ::hit(const Ray &ray, float tMin, float tMax, HitRecord &record) const {
     float t = (y - ray.getOrigin().y) / ray.getDirection().y;
 
     if (t < tMin || t > tMax)
@@ -28,7 +27,7 @@ bool YAxisAlignedRectangle::hit(const Ray &ray, float tMin, float tMax, HitRecor
     return true;
 }
 
-bool YAxisAlignedRectangle::boundingBox(AABB &outputBox) const {
+bool RectangleXZ::boundingBox(AABB &outputBox) const {
     outputBox = AABB(
             glm::vec3(x0, y - 0.0001f, z0),
             glm::vec3(x1, y + 0.0001f, z1)

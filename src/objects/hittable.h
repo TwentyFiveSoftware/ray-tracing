@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "../ray.h"
 #include "../structs/hit_record.h"
 #include "../aabb.h"

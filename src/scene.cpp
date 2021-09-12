@@ -3,9 +3,9 @@
 #include "material/material_metal.h"
 #include "material/material_refractive.h"
 #include "objects/sphere.h"
-#include "objects/x_aa_rect.h"
-#include "objects/y_aa_rect.h"
-#include "objects/z_aa_rect.h"
+#include "objects/rect_yz.h"
+#include "objects/rect_xz.h"
+#include "objects/rect_xy.h"
 #include "texture/texture_checkered.h"
 #include "texture/texture_noise.h"
 #include "texture/texture_image.h"
@@ -85,7 +85,7 @@ Scene Scene::createTestScene() {
                                     std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(4.0f))));
 
     auto diffuseLight = std::make_shared<MaterialDiffuseLight>(glm::vec3(4.0f, 4.0f, 4.0f));
-    objects.add(std::make_shared<ZAxisAlignedRectangle>(3.0f, 5.0f, 1.0f, 3.0f, 2.0f, diffuseLight));
+    objects.add(std::make_shared<RectangleXY>(3.0f, 5.0f, 1.0f, 3.0f, 2.0f, diffuseLight));
 
 
     Camera camera(
@@ -108,12 +108,12 @@ Scene Scene::createCornellBoxScene() {
     auto green = std::make_shared<MaterialDiffuse>(glm::vec3(0.12f, 0.45f, 0.15f));
     auto light = std::make_shared<MaterialDiffuseLight>(glm::vec3(15.0f, 15.0f, 15.0f));
 
-    objects.add(std::make_shared<ZAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
-    objects.add(std::make_shared<YAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, white));
-    objects.add(std::make_shared<YAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
-    objects.add(std::make_shared<XAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, green));
-    objects.add(std::make_shared<XAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, red));
-    objects.add(std::make_shared<YAxisAlignedRectangle>(210.0f, 340.0f, 225.0f, 330.0f, 549.9f, light));
+    objects.add(std::make_shared<RectangleXY>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
+    objects.add(std::make_shared<RectangleXZ>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, white));
+    objects.add(std::make_shared<RectangleXZ>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
+    objects.add(std::make_shared<RectangleYZ>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, green));
+    objects.add(std::make_shared<RectangleYZ>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, red));
+    objects.add(std::make_shared<RectangleXZ>(210.0f, 340.0f, 225.0f, 330.0f, 549.9f, light));
 
     Camera camera(
             {
