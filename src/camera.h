@@ -1,14 +1,16 @@
 #pragma once
 
 #include "ray.h"
+#include "settings/camera_settings.h"
 
 class Camera {
 public:
-    Camera();
+    Camera(CameraSettings cameraSettings);
 
     [[nodiscard]] Ray getRay(float u, float v) const;
 
 private:
+    CameraSettings cameraSettings;
     float viewportHeight;
     float viewportWidth;
     glm::vec3 upperLeftCorner;

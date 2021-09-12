@@ -9,8 +9,8 @@
 #include "texture/texture_image.h"
 #include "material/material_diffuse_light.h"
 
-Scene::Scene(const HittableList &objects, const glm::vec3 &backgroundColor) :
-        camera(Camera()), objects(BVHNode(objects)), backgroundColor(backgroundColor) {}
+Scene::Scene(const HittableList &objects, const Camera &camera, const glm::vec3 &backgroundColor) :
+        objects(BVHNode(objects)), camera(camera), backgroundColor(backgroundColor) {}
 
 Scene Scene::createRandomScene() {
     HittableList objects;
@@ -55,41 +55,47 @@ Scene Scene::createRandomScene() {
     auto material3 = std::make_shared<MaterialMetal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.0f);
     objects.add(make_shared<Sphere>(glm::vec3(4.0f, 1.0f, 0.0f), 1.0f, material3));
 
+
+    Camera camera(
+            {
+                    .fov = 25.0f,
+                    .aperture = 0.1f,
+                    .focusDistance = 10.0f,
+                    .lookFrom = glm::vec3(12.0f, 2.0f, -3.0f),
+                    .lookAt = glm::vec3(0.0f, 0.0f, 0.0f)
+            });
+
     glm::vec3 backgroundColor = glm::vec3(0.70f, 0.80f, 1.00f);
 
-    return Scene(objects, backgroundColor);
+    return Scene(objects, camera, backgroundColor);
 }
 
 Scene Scene::createTestScene() {
-//    auto materialGround = std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(4.0f));
-//    auto materialLeft = std::make_shared<MaterialRefractive>(1.5f);
-//    auto materialCenter = std::make_shared<MaterialDiffuse>(glm::vec3(0.1f, 0.2f, 0.5f));
-//    auto materialRight = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.6f, 0.2f), 0.0f);
-//
-//    HittableList objects;
-//    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -100.5f, 1.0f), 100.0f, materialGround));
-//    objects.add(std::make_shared<Sphere>(glm::vec3(-1.0f, 0.0f, 1.0f), 0.5f, materialLeft));
-//    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f, materialCenter));
-//    objects.add(std::make_shared<Sphere>(glm::vec3(1.0f, 0.0f, 1.0f), 0.5f, materialRight));
-
     HittableList objects;
 
     auto textureGround = std::make_shared<TextureCheckered>(
             1.0f, std::make_shared<TextureSolidColor>(glm::vec3(0.05f, 0.05f, 0.05f)),
             std::make_shared<TextureSolidColor>(glm::vec3(0.95f, 0.95f, 0.95f)));
-    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -1003.0f, 0.0f), 1000.0f,
+    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -1000.0f, 0.0f), 1000.0f,
                                          std::make_shared<MaterialDiffuse>(textureGround)));
 
-    auto material1 = std::make_shared<MaterialDiffuse>(std::make_shared<TextureImage>("earthmap.jpg"));
-    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, material1));
+    objects.add(make_shared<Sphere>(glm::vec3(0.0f, 2.0f, 0.0f), 2.0f,
+                                    std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(4.0f))));
 
-    auto material2 = std::make_shared<MaterialDiffuseLight>(glm::vec3(4.0f, 4.0f, 4.0f));
-    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 5.0f, 0.0f), 1.5f, material2));
-    objects.add(std::make_shared<AxisAlignedRectangle>(2.0f, 4.0f, -1.5f, 1.0f, 2.0f, material2));
+    auto diffuseLight = std::make_shared<MaterialDiffuseLight>(glm::vec3(4.0f, 4.0f, 4.0f));
+    objects.add(std::make_shared<AxisAlignedRectangle>(3.0f, 5.0f, 1.0f, 3.0f, 2.0f, diffuseLight));
+
+
+    Camera camera(
+            {
+                    .fov = 20.0f,
+                    .lookFrom = glm::vec3(26.0f, 3.0f, -6.0f),
+                    .lookAt = glm::vec3(0.0f, 2.0f, 0.0f)
+            });
 
     glm::vec3 backgroundColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
-    return Scene(objects, backgroundColor);
+    return Scene(objects, camera, backgroundColor);
 }
 
 Camera Scene::getCamera() const {

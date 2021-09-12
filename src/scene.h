@@ -6,7 +6,7 @@
 
 class Scene {
 public:
-    Scene(const HittableList &objects, const glm::vec3 &backgroundColor);
+    Scene(const HittableList &objects, const Camera &camera, const glm::vec3 &backgroundColor);
 
     static Scene createRandomScene();
 
@@ -19,8 +19,8 @@ public:
     [[nodiscard]] glm::vec3 getBackgroundColor() const;
 
 private:
-    Camera camera;
     BVHNode objects;
+    Camera camera;
     glm::vec3 backgroundColor;
 
 };
