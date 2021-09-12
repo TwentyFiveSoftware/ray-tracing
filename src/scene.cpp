@@ -3,6 +3,8 @@
 #include "material/material_metal.h"
 #include "material/material_refractive.h"
 #include "objects/sphere.h"
+#include "objects/x_aa_rect.h"
+#include "objects/y_aa_rect.h"
 #include "objects/z_aa_rect.h"
 #include "texture/texture_checkered.h"
 #include "texture/texture_noise.h"
@@ -91,6 +93,33 @@ Scene Scene::createTestScene() {
                     .fov = 20.0f,
                     .lookFrom = glm::vec3(26.0f, 3.0f, -6.0f),
                     .lookAt = glm::vec3(0.0f, 2.0f, 0.0f)
+            });
+
+    glm::vec3 backgroundColor = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    return Scene(objects, camera, backgroundColor);
+}
+
+Scene Scene::createCornellBoxScene() {
+    HittableList objects;
+
+    auto red = std::make_shared<MaterialDiffuse>(glm::vec3(0.65f, 0.05f, 0.05f));
+    auto white = std::make_shared<MaterialDiffuse>(glm::vec3(0.73f, 0.73f, 0.73f));
+    auto green = std::make_shared<MaterialDiffuse>(glm::vec3(0.12f, 0.45f, 0.15f));
+    auto light = std::make_shared<MaterialDiffuseLight>(glm::vec3(15.0f, 15.0f, 15.0f));
+
+    objects.add(std::make_shared<ZAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
+    objects.add(std::make_shared<YAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, white));
+    objects.add(std::make_shared<YAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
+    objects.add(std::make_shared<XAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, green));
+    objects.add(std::make_shared<XAxisAlignedRectangle>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, red));
+    objects.add(std::make_shared<YAxisAlignedRectangle>(210.0f, 340.0f, 225.0f, 330.0f, 549.9f, light));
+
+    Camera camera(
+            {
+                    .fov = 40.0f,
+                    .lookFrom = glm::vec3(275.0f, 275.0f, -800.0f),
+                    .lookAt = glm::vec3(275.0f, 275.0f, 0.0f)
             });
 
     glm::vec3 backgroundColor = glm::vec3(0.0f, 0.0f, 0.0f);

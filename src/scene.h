@@ -12,6 +12,8 @@ public:
 
     static Scene createTestScene();
 
+    static Scene createCornellBoxScene();
+
     [[nodiscard]] Camera getCamera() const;
 
     [[nodiscard]] BVHNode getObjects() const;
