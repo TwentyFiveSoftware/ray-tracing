@@ -3,11 +3,11 @@
 #include <memory>
 #include "hittable.h"
 
-class AxisAlignedRectangle : public Hittable {
+class ZAxisAlignedRectangle : public Hittable {
 public:
-    AxisAlignedRectangle();
+    ZAxisAlignedRectangle();
 
-    AxisAlignedRectangle(float x0, float x1, float y0, float y1, float z, std::shared_ptr<Material> material);
+    ZAxisAlignedRectangle(float x0, float x1, float y0, float y1, float z, std::shared_ptr<Material> material);
 
     bool hit(const Ray &ray, float tMin, float tMax, HitRecord &record) const override;
 

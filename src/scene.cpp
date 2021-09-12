@@ -3,7 +3,7 @@
 #include "material/material_metal.h"
 #include "material/material_refractive.h"
 #include "objects/sphere.h"
-#include "objects/aa_rect.h"
+#include "objects/z_aa_rect.h"
 #include "texture/texture_checkered.h"
 #include "texture/texture_noise.h"
 #include "texture/texture_image.h"
@@ -83,7 +83,7 @@ Scene Scene::createTestScene() {
                                     std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(4.0f))));
 
     auto diffuseLight = std::make_shared<MaterialDiffuseLight>(glm::vec3(4.0f, 4.0f, 4.0f));
-    objects.add(std::make_shared<AxisAlignedRectangle>(3.0f, 5.0f, 1.0f, 3.0f, 2.0f, diffuseLight));
+    objects.add(std::make_shared<ZAxisAlignedRectangle>(3.0f, 5.0f, 1.0f, 3.0f, 2.0f, diffuseLight));
 
 
     Camera camera(
