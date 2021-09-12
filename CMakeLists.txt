@@ -44,6 +44,8 @@ add_executable(
         src/texture/texture_checkered.h
         src/texture/texture_checkered.cpp
         src/texture/texture_noise.h
+        src/texture/texture_image.h
+        src/texture/texture_image.cpp
         src/material/material.h
         src/material/material_diffuse.h
         src/material/material_diffuse.cpp

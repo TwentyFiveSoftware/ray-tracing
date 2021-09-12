@@ -5,6 +5,7 @@
 #include "objects/sphere.h"
 #include "texture/texture_checkered.h"
 #include "texture/texture_noise.h"
+#include "texture/texture_image.h"
 
 Scene::Scene(const HittableList &objects) :
         camera(Camera()),
@@ -58,16 +59,21 @@ Scene Scene::createRandomScene() {
 }
 
 Scene Scene::createTestScene() {
-    auto materialGround = std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(4.0f));
-    auto materialLeft = std::make_shared<MaterialRefractive>(1.5f);
-    auto materialCenter = std::make_shared<MaterialDiffuse>(glm::vec3(0.1f, 0.2f, 0.5f));
-    auto materialRight = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.6f, 0.2f), 0.0f);
+//    auto materialGround = std::make_shared<MaterialDiffuse>(std::make_shared<TextureNoise>(4.0f));
+//    auto materialLeft = std::make_shared<MaterialRefractive>(1.5f);
+//    auto materialCenter = std::make_shared<MaterialDiffuse>(glm::vec3(0.1f, 0.2f, 0.5f));
+//    auto materialRight = std::make_shared<MaterialMetal>(glm::vec3(0.8f, 0.6f, 0.2f), 0.0f);
+//
+//    HittableList objects;
+//    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -100.5f, 1.0f), 100.0f, materialGround));
+//    objects.add(std::make_shared<Sphere>(glm::vec3(-1.0f, 0.0f, 1.0f), 0.5f, materialLeft));
+//    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f, materialCenter));
+//    objects.add(std::make_shared<Sphere>(glm::vec3(1.0f, 0.0f, 1.0f), 0.5f, materialRight));
 
     HittableList objects;
-    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -100.5f, 1.0f), 100.0f, materialGround));
-    objects.add(std::make_shared<Sphere>(glm::vec3(-1.0f, 0.0f, 1.0f), 0.5f, materialLeft));
-    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 1.0f), 0.5f, materialCenter));
-    objects.add(std::make_shared<Sphere>(glm::vec3(1.0f, 0.0f, 1.0f), 0.5f, materialRight));
+
+    auto material = std::make_shared<MaterialDiffuse>(std::make_shared<TextureImage>("earthmap.jpg"));
+    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, material));
 
     return Scene(objects);
 }
