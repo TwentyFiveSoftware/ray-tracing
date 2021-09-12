@@ -11,6 +11,7 @@
 #include "texture/texture_noise.h"
 #include "texture/texture_image.h"
 #include "material/material_diffuse_light.h"
+#include "objects/translation.h"
 
 Scene::Scene(const HittableList &objects, const Camera &camera, const glm::vec3 &backgroundColor) :
         objects(BVHNode(objects)), camera(camera), backgroundColor(backgroundColor) {}
@@ -116,8 +117,15 @@ Scene Scene::createCornellBoxScene() {
     objects.add(std::make_shared<RectangleYZ>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, red));
     objects.add(std::make_shared<RectangleXZ>(210.0f, 340.0f, 225.0f, 330.0f, 549.9f, light));
 
-    objects.add(std::make_shared<Box>(glm::vec3(265.0f, 0.0f, 65.0f), glm::vec3(430.0f, 165.0f, 230.0f), white));
-    objects.add(std::make_shared<Box>(glm::vec3(130.0f, 0.0f, 295.0f), glm::vec3(295.0f, 330.0f, 460.0f), white));
+    std::shared_ptr<Hittable> box1 = std::make_shared<Box>(
+            glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 165.0f, 165.0f), white);
+    box1 = std::make_shared<Translation>(box1, glm::vec3(265.0f, 0.0f, 65.0f));
+    objects.add(box1);
+
+    std::shared_ptr<Hittable> box2 = std::make_shared<Box>(
+            glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 330.0f, 165.0f), white);
+    box2 = std::make_shared<Translation>(box2, glm::vec3(130.0f, 0.0f, 295.0f));
+    objects.add(box2);
 
 
     Camera camera(

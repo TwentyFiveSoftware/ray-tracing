@@ -38,6 +38,8 @@ add_executable(
         src/objects/rect_xy.cpp
         src/objects/box.h
         src/objects/box.cpp
+        src/objects/translation.h
+        src/objects/translation.cpp
         src/structs/hit_record.h
         src/structs/thread_info.h
         src/structs/scatter_info.h
