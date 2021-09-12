@@ -3,7 +3,7 @@
 #include "material/material_metal.h"
 #include "material/material_refractive.h"
 #include "objects/sphere.h"
-#include "utils.h"
+#include "texture/texture_checkered.h"
 
 Scene::Scene(const HittableList &objects) :
         camera(Camera()),
@@ -12,8 +12,11 @@ Scene::Scene(const HittableList &objects) :
 Scene Scene::createRandomScene() {
     HittableList objects;
 
-    auto materialGround = std::make_shared<MaterialDiffuse>(glm::vec3(0.5f, 0.5f, 0.5f));
-    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -1000.0f, 0.0f), 1000.0f, materialGround));
+    auto textureGround = std::make_shared<TextureCheckered>(
+            1.0f, std::make_shared<TextureSolidColor>(glm::vec3(0.05f, 0.05f, 0.05f)),
+            std::make_shared<TextureSolidColor>(glm::vec3(0.95f, 0.95f, 0.95f)));
+    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -1000.0f, 0.0f), 1000.0f,
+                                         std::make_shared<MaterialDiffuse>(textureGround)));
 
     for (int16_t x = -10; x < 10; x++) {
         for (int16_t z = -10; z < 10; z++) {
