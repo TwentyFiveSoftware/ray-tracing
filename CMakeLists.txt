@@ -30,12 +30,14 @@ add_executable(
         src/objects/bvh_node.cpp
         src/objects/sphere.h
         src/objects/sphere.cpp
-        src/objects/x_aa_rect.h
-        src/objects/x_aa_rect.cpp
-        src/objects/y_aa_rect.h
-        src/objects/y_aa_rect.cpp
-        src/objects/z_aa_rect.h
-        src/objects/z_aa_rect.cpp
+        src/objects/rect_yz.h
+        src/objects/rect_yz.cpp
+        src/objects/rect_xz.h
+        src/objects/rect_xz.cpp
+        src/objects/rect_xy.h
+        src/objects/rect_xy.cpp
+        src/objects/box.h
+        src/objects/box.cpp
         src/structs/hit_record.h
         src/structs/thread_info.h
         src/structs/scatter_info.h

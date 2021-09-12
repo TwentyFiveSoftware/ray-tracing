@@ -6,6 +6,7 @@
 #include "objects/rect_yz.h"
 #include "objects/rect_xz.h"
 #include "objects/rect_xy.h"
+#include "objects/box.h"
 #include "texture/texture_checkered.h"
 #include "texture/texture_noise.h"
 #include "texture/texture_image.h"
@@ -114,6 +115,10 @@ Scene Scene::createCornellBoxScene() {
     objects.add(std::make_shared<RectangleYZ>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, green));
     objects.add(std::make_shared<RectangleYZ>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, red));
     objects.add(std::make_shared<RectangleXZ>(210.0f, 340.0f, 225.0f, 330.0f, 549.9f, light));
+
+    objects.add(std::make_shared<Box>(glm::vec3(265.0f, 0.0f, 65.0f), glm::vec3(430.0f, 165.0f, 230.0f), white));
+    objects.add(std::make_shared<Box>(glm::vec3(130.0f, 0.0f, 295.0f), glm::vec3(295.0f, 330.0f, 460.0f), white));
+
 
     Camera camera(
             {
