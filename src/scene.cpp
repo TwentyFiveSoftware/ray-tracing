@@ -6,10 +6,10 @@
 #include "texture/texture_checkered.h"
 #include "texture/texture_noise.h"
 #include "texture/texture_image.h"
+#include "material/material_diffuse_light.h"
 
-Scene::Scene(const HittableList &objects) :
-        camera(Camera()),
-        objects(BVHNode(objects)) {}
+Scene::Scene(const HittableList &objects, const glm::vec3 &backgroundColor) :
+        camera(Camera()), objects(BVHNode(objects)), backgroundColor(backgroundColor) {}
 
 Scene Scene::createRandomScene() {
     HittableList objects;
@@ -54,8 +54,9 @@ Scene Scene::createRandomScene() {
     auto material3 = std::make_shared<MaterialMetal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.0f);
     objects.add(make_shared<Sphere>(glm::vec3(4.0f, 1.0f, 0.0f), 1.0f, material3));
 
+    glm::vec3 backgroundColor = glm::vec3(0.70f, 0.80f, 1.00f);
 
-    return Scene(objects);
+    return Scene(objects, backgroundColor);
 }
 
 Scene Scene::createTestScene() {
@@ -72,10 +73,21 @@ Scene Scene::createTestScene() {
 
     HittableList objects;
 
-    auto material = std::make_shared<MaterialDiffuse>(std::make_shared<TextureImage>("earthmap.jpg"));
-    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, material));
+    auto textureGround = std::make_shared<TextureCheckered>(
+            1.0f, std::make_shared<TextureSolidColor>(glm::vec3(0.05f, 0.05f, 0.05f)),
+            std::make_shared<TextureSolidColor>(glm::vec3(0.95f, 0.95f, 0.95f)));
+    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -1003.0f, 0.0f), 1000.0f,
+                                         std::make_shared<MaterialDiffuse>(textureGround)));
 
-    return Scene(objects);
+    auto material1 = std::make_shared<MaterialDiffuse>(std::make_shared<TextureImage>("earthmap.jpg"));
+    objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f, material1));
+
+    auto material2 = std::make_shared<MaterialDiffuseLight>(glm::vec3(4.0f, 4.0f, 4.0f));
+    objects.add(std::make_shared<Sphere>(glm::vec3(3.5f, 3.0f, 3.0f), 2.0f, material2));
+
+    glm::vec3 backgroundColor = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    return Scene(objects, backgroundColor);
 }
 
 Camera Scene::getCamera() const {
@@ -84,4 +96,8 @@ Camera Scene::getCamera() const {
 
 BVHNode Scene::getObjects() const {
     return objects;
+}
+
+glm::vec3 Scene::getBackgroundColor() const {
+    return backgroundColor;
 }

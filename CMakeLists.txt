@@ -53,6 +53,8 @@ add_executable(
         src/material/material_metal.cpp
         src/material/material_refractive.h
         src/material/material_refractive.cpp
+        src/material/material_diffuse_light.h
+        src/material/material_diffuse_light.cpp
         src/utils/utils.h
         src/utils/utils.cpp
         src/utils/perlin.h

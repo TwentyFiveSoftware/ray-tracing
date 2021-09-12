@@ -3,27 +3,23 @@
 #include "settings/settings.h"
 #include <iostream>
 
-glm::vec3 calculateRayColor(const Ray &ray, const Hittable &objects, uint16_t depth) {
+glm::vec3 calculateRayColor(const Ray &ray, const glm::vec3 &backgroundColor, const Hittable &objects, uint16_t depth) {
+    if (depth >= Settings::MAX_DEPTH)
+        return {0.0f, 0.0f, 0.0f};
+
     HitRecord record = {};
 
-    if (depth >= Settings::MAX_DEPTH) {
-        return {0.0f, 0.0f, 0.0f};
-    }
+    if (!objects.hit(ray, 0.001, INFINITY, record))
+        return backgroundColor;
 
-    if (objects.hit(ray, 0.001, INFINITY, record)) {
-        ScatterInfo scatterInfo = record.materialPtr->scatter(
-                ray, record.pos, record.normal, record.uv, record.frontFace);
+    glm::vec3 emission = record.materialPtr->emitted(record.pos, record.uv);
+    ScatterInfo scatterInfo = record.materialPtr->scatter(ray, record.pos, record.normal, record.uv, record.frontFace);
 
-        if (scatterInfo.doesScatter) {
-            return scatterInfo.attenuation * calculateRayColor(scatterInfo.scatteredRay, objects, depth + 1);
-        }
+    if (!scatterInfo.doesScatter)
+        return emission;
 
-        return {0.0f, 0.0f, 0.0f};
-    }
-
-    // background: linear interpolation between white and blue based on normalized y coordinate of direction vector
-    float t = 0.5f * (ray.getNormalizedDirection().y + 1.0f);
-    return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
+    return emission + scatterInfo.attenuation *
+                      calculateRayColor(scatterInfo.scatteredRay, backgroundColor, objects, depth + 1);
 }
 
 void writeColor(uint16_t x, uint16_t y, glm::vec3 color, unsigned char* pixels) {
@@ -47,7 +43,8 @@ void renderThreadFunction(const ThreadInfo &threadInfo) {
             float v = (float(y) + randomFloat()) / Settings::HEIGHT;
 
             threadInfo.summedSampleDataPerPixel[y * Settings::WIDTH + x] +=
-                    calculateRayColor(threadInfo.scene.getCamera().getRay(u, v), threadInfo.scene.getObjects(), 0);
+                    calculateRayColor(threadInfo.scene.getCamera().getRay(u, v), threadInfo.scene.getBackgroundColor(),
+                                      threadInfo.scene.getObjects(), 0);
 
             glm::vec3 pixelColor =
                     threadInfo.summedSampleDataPerPixel[y * Settings::WIDTH + x] /
