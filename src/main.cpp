@@ -83,6 +83,8 @@ int WinMain() {
     auto renderBeginTime = std::chrono::steady_clock::now();
     std::optional<std::chrono::steady_clock::time_point> renderEndTime = std::nullopt;
 
+    auto sampleRenderBeginTime = std::chrono::steady_clock::now();
+
     uint16_t currentPixelSample = 1;
 
     ThreadInfo threadInfo = {
@@ -115,8 +117,12 @@ int WinMain() {
             }
 
             if (allThreadsFinished) {
+                auto sampleRenderTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        std::chrono::steady_clock::now() - sampleRenderBeginTime).count();
+                sampleRenderBeginTime = std::chrono::steady_clock::now();
+
                 std::cout << "Sample " << currentPixelSample << " / " << Settings::SAMPLES_PER_PIXEL
-                          << " rendered" << std::endl;
+                          << " rendered in " << sampleRenderTime << " ms" << std::endl;
 
                 if (Settings::SAVE_IMAGE_AFTER_EACH_SAMPLE)
                     saveImage();
