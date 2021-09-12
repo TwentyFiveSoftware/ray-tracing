@@ -2,10 +2,11 @@
 
 #include "camera.h"
 #include "objects/hittable_list.h"
+#include "objects/bvh_node.h"
 
 class Scene {
 public:
-    Scene(HittableList objects);
+    explicit Scene(const HittableList &objects);
 
     static Scene createRandomScene();
 
@@ -13,11 +14,10 @@ public:
 
     [[nodiscard]] Camera getCamera() const;
 
-    [[nodiscard]] HittableList getObjects() const;
+    [[nodiscard]] BVHNode getObjects() const;
 
 private:
     Camera camera;
-    HittableList objects;
-
+    BVHNode objects;
 
 };

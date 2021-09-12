@@ -26,6 +26,8 @@ add_executable(
         src/objects/hittable.h
         src/objects/hittable_list.h
         src/objects/hittable_list.cpp
+        src/objects/bvh_node.h
+        src/objects/bvh_node.cpp
         src/objects/sphere.h
         src/objects/sphere.cpp
         src/structs/hit_record.h
@@ -37,6 +39,8 @@ add_executable(
         src/camera.cpp
         src/scene.h
         src/scene.cpp
+        src/aabb.h
+        src/aabb.cpp
         src/material/material.h
         src/material/material_diffuse.h
         src/material/material_diffuse.cpp

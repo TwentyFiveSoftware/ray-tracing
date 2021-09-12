@@ -11,6 +11,8 @@ public:
 
     bool hit(const Ray &ray, float tMin, float tMax, HitRecord &record) const override;
 
+    bool boundingBox(AABB &outputBox) const override;
+
 private:
     glm::vec3 center;
     float radius;

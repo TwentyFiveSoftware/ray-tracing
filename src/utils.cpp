@@ -18,6 +18,10 @@ float randomFloat() {
     return randomFloat(0.0f, 1.0f);
 }
 
+int32_t randomInt(int32_t min, int32_t max) {
+    return static_cast<int32_t>(randomFloat(float(min), float(max + 1)));
+}
+
 glm::vec3 randomVector(float min, float max) {
     return {randomFloat(min, max), randomFloat(min, max), randomFloat(min, max)};
 }
@@ -79,4 +83,10 @@ glm::vec3 getRandomPointInUnitDisk() {
 
         return point;
     }
+}
+
+AABB calculateSurroundingBox(AABB box1, AABB box2) {
+    glm::vec3 minPoint = glm::min(box1.min(), box2.min());
+    glm::vec3 maxPoint = glm::max(box1.max(), box2.max());
+    return AABB(minPoint, maxPoint);
 }

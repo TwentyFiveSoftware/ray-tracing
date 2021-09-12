@@ -1,12 +1,15 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "aabb.h"
 
 float degreesToRadians(float degrees);
 
 float randomFloat(float min, float max);
 
 float randomFloat();
+
+int32_t randomInt(int32_t min, int32_t max);
 
 glm::vec3 randomVector(float min, float max);
 
@@ -25,3 +28,5 @@ bool canRefract(const glm::vec3 &vector, const glm::vec3 &normal, float refracti
 float reflectanceFactorApproximation(const glm::vec3 &vector, const glm::vec3 &normal, float refractionIndexRatio);
 
 glm::vec3 getRandomPointInUnitDisk();
+
+AABB calculateSurroundingBox(AABB box1, AABB box2);

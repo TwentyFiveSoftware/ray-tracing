@@ -1,14 +1,13 @@
 #include "scene.h"
-
 #include "material/material_diffuse.h"
 #include "material/material_metal.h"
 #include "material/material_refractive.h"
 #include "objects/sphere.h"
 #include "utils.h"
 
-Scene::Scene(HittableList objects) :
+Scene::Scene(const HittableList &objects) :
         camera(Camera()),
-        objects(std::move(objects)) {}
+        objects(BVHNode(objects)) {}
 
 Scene Scene::createRandomScene() {
     HittableList objects;
@@ -73,6 +72,6 @@ Camera Scene::getCamera() const {
     return camera;
 }
 
-HittableList Scene::getObjects() const {
+BVHNode Scene::getObjects() const {
     return objects;
 }
