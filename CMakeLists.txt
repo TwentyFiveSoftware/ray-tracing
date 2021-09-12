@@ -42,6 +42,8 @@ add_executable(
         src/objects/translation.cpp
         src/objects/rotation_y.h
         src/objects/rotation_y.cpp
+        src/objects/constant_medium.h
+        src/objects/constant_medium.cpp
         src/structs/hit_record.h
         src/structs/thread_info.h
         src/structs/scatter_info.h
@@ -67,6 +69,8 @@ add_executable(
         src/material/material_refractive.cpp
         src/material/material_diffuse_light.h
         src/material/material_diffuse_light.cpp
+        src/material/material_isotropic.h
+        src/material/material_isotropic.cpp
         src/utils/utils.h
         src/utils/utils.cpp
         src/utils/perlin.h

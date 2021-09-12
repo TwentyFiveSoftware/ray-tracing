@@ -13,6 +13,7 @@
 #include "material/material_diffuse_light.h"
 #include "objects/translation.h"
 #include "objects/rotation_y.h"
+#include "objects/constant_medium.h"
 
 Scene::Scene(const HittableList &objects, const Camera &camera, const glm::vec3 &backgroundColor) :
         objects(BVHNode(objects)), camera(camera), backgroundColor(backgroundColor) {}
@@ -109,25 +110,27 @@ Scene Scene::createCornellBoxScene() {
     auto red = std::make_shared<MaterialDiffuse>(glm::vec3(0.65f, 0.05f, 0.05f));
     auto white = std::make_shared<MaterialDiffuse>(glm::vec3(0.73f, 0.73f, 0.73f));
     auto green = std::make_shared<MaterialDiffuse>(glm::vec3(0.12f, 0.45f, 0.15f));
-    auto light = std::make_shared<MaterialDiffuseLight>(glm::vec3(15.0f, 15.0f, 15.0f));
+    auto light = std::make_shared<MaterialDiffuseLight>(glm::vec3(7.0f, 7.0f, 7.0f));
 
     objects.add(std::make_shared<RectangleXY>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
     objects.add(std::make_shared<RectangleXZ>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, white));
     objects.add(std::make_shared<RectangleXZ>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, white));
     objects.add(std::make_shared<RectangleYZ>(0.0f, 550.0f, 0.0f, 550.0f, 0.0f, green));
     objects.add(std::make_shared<RectangleYZ>(0.0f, 550.0f, 0.0f, 550.0f, 550.0f, red));
-    objects.add(std::make_shared<RectangleXZ>(210.0f, 340.0f, 225.0f, 330.0f, 549.9f, light));
+    objects.add(std::make_shared<RectangleXZ>(110.0f, 440.0f, 120.0f, 430.0f, 549.9f, light));
 
     std::shared_ptr<Hittable> box1 = std::make_shared<Box>(
             glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 165.0f, 165.0f), white);
-    box1 = std::make_shared<RotationY>(box1, -18);
+    box1 = std::make_shared<RotationY>(box1, -18.0f);
     box1 = std::make_shared<Translation>(box1, glm::vec3(265.0f, 0.0f, 65.0f));
+//    box1 = std::make_shared<ConstantMedium>(box1, 0.01f, glm::vec3(0.0f, 0.0f, 0.0f));
     objects.add(box1);
 
     std::shared_ptr<Hittable> box2 = std::make_shared<Box>(
             glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 330.0f, 165.0f), white);
-    box2 = std::make_shared<RotationY>(box2, 15);
+    box2 = std::make_shared<RotationY>(box2, 15.0f);
     box2 = std::make_shared<Translation>(box2, glm::vec3(130.0f, 0.0f, 295.0f));
+//    box2 = std::make_shared<ConstantMedium>(box2, 0.01f, glm::vec3(1.0f, 1.0f, 1.0f));
     objects.add(box2);
 
 
