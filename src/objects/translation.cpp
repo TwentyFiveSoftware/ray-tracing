@@ -21,3 +21,11 @@ bool Translation::boundingBox(AABB &outputBox) const {
     outputBox = AABB(outputBox.min() + offset, outputBox.max() + offset);
     return true;
 }
+
+float Translation::pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const {
+    return object->pdfValue(origin - offset, direction);
+}
+
+glm::vec3 Translation::randomPoint(const glm::vec3 &origin) const {
+    return object->randomPoint(origin - offset);
+}

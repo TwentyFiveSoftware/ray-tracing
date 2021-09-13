@@ -48,3 +48,18 @@ bool HittableList::boundingBox(AABB &outputBox) const {
 
     return true;
 }
+
+float HittableList::pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const {
+    float weight = 1.0f / float(objects.size());
+    float sum = 0.0f;
+
+    for (const auto &object : objects)
+        sum += weight * object->pdfValue(origin, direction);
+
+    return sum;
+}
+
+glm::vec3 HittableList::randomPoint(const glm::vec3 &origin) const {
+    auto size = static_cast<int32_t>(objects.size());
+    return objects[randomInt(0, size - 1)]->randomPoint(origin);
+}

@@ -32,3 +32,5 @@ float reflectanceFactorApproximation(const glm::vec3 &vector, const glm::vec3 &n
 glm::vec3 getRandomPointInUnitDisk();
 
 AABB calculateSurroundingBox(AABB box1, AABB box2);
+
+glm::vec3 randomToSphere(float radius, float distance);

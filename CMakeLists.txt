@@ -44,9 +44,11 @@ add_executable(
         src/objects/rotation_y.cpp
         src/objects/constant_medium.h
         src/objects/constant_medium.cpp
+        src/objects/flip_face.h
+        src/objects/flip_face.cpp
         src/structs/hit_record.h
         src/structs/thread_info.h
-        src/structs/scatter_info.h
+        src/structs/scatter_record.h
         src/camera.h
         src/camera.cpp
         src/scene.h
@@ -75,6 +77,15 @@ add_executable(
         src/utils/utils.cpp
         src/utils/perlin.h
         src/utils/perlin.cpp
+        src/utils/onb.h
+        src/utils/onb.cpp
+        src/pdf/pdf.h
+        src/pdf/pdf_cosine.h
+        src/pdf/pdf_cosine.cpp
+        src/pdf/pdf_hittable.h
+        src/pdf/pdf_hittable.cpp
+        src/pdf/pdf_mixture.h
+        src/pdf/pdf_mixture.cpp
 )
 
 target_link_libraries(RayTracing SDL2.lib)

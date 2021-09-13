@@ -8,7 +8,7 @@ float degreesToRadians(float degrees) {
 float randomFloat(float min, float max) {
     std::random_device rd;
     std::mt19937 engine(rd());
-    std::uniform_real_distribution<float> distribution(min, max);
+    std::uniform_real_distribution<float> distribution(min, max - 0.000001f);
     return distribution(engine);
 }
 
@@ -87,4 +87,16 @@ AABB calculateSurroundingBox(AABB box1, AABB box2) {
     glm::vec3 minPoint = glm::min(box1.min(), box2.min());
     glm::vec3 maxPoint = glm::max(box1.max(), box2.max());
     return AABB(minPoint, maxPoint);
+}
+
+glm::vec3 randomToSphere(float radius, float distance) {
+    float r1 = randomFloat();
+    float r2 = randomFloat();
+
+    float phi = 2.0f * PI * r1;
+    float z = 1.0f + r2 * (std::sqrt(1.0f - radius * radius / (distance * distance)) - 1.0f);
+    float x = std::cos(phi) * std::sqrt(1.0f - z * z);
+    float y = std::sin(phi) * std::sqrt(1.0f - z * z);
+
+    return glm::vec3(x, y, z);
 }

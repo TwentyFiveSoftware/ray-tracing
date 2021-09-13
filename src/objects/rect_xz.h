@@ -12,6 +12,10 @@ public:
 
     bool boundingBox(AABB &outputBox) const override;
 
+    [[nodiscard]] float pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const override;
+
+    [[nodiscard]] glm::vec3 randomPoint(const glm::vec3 &origin) const override;
+
 private:
     float x0, x1, z0, z1, y;
     std::shared_ptr<Material> materialPtr;

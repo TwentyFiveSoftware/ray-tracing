@@ -1,4 +1,5 @@
 #include "rect_xy.h"
+#include "../utils/utils.h"
 
 RectangleXY::RectangleXY() :
         x0(), x1(), y0(), y1(), z() {}
@@ -34,4 +35,22 @@ bool RectangleXY::boundingBox(AABB &outputBox) const {
     );
 
     return true;
+}
+
+float RectangleXY::pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const {
+    HitRecord record = {};
+
+    if (!hit(Ray(origin, direction), 0.001f, INFINITY, record))
+        return 0.0f;
+
+    float area = (x1 - x0) * (y1 - y0);
+    float distance = record.t * glm::length(direction);
+    float cosine = std::abs(glm::dot(direction, record.normal) / glm::length(direction));
+
+    return distance * distance / (cosine * area);
+}
+
+glm::vec3 RectangleXY::randomPoint(const glm::vec3 &origin) const {
+    glm::vec3 randomPoint = glm::vec3(randomFloat(x0, x1), randomFloat(y0, y1), z);
+    return randomPoint - origin;
 }

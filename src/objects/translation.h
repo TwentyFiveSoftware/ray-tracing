@@ -10,6 +10,10 @@ public:
 
     bool boundingBox(AABB &outputBox) const override;
 
+    [[nodiscard]] float pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const override;
+
+    [[nodiscard]] glm::vec3 randomPoint(const glm::vec3 &origin) const override;
+
 private:
     std::shared_ptr<Hittable> object;
     glm::vec3 offset;

@@ -1,4 +1,5 @@
 #include "sphere.h"
+#include "../utils/onb.h"
 
 #include <utility>
 
@@ -53,4 +54,22 @@ glm::vec2 Sphere::getSphereUV(const glm::vec3 &point) {
     float u = phi / (2 * PI);
     float v = theta / PI;
     return {u, v};
+}
+
+float Sphere::pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const {
+    HitRecord record = {};
+
+    if (!hit(Ray(origin, direction), 0.001f, INFINITY, record))
+        return 0.0f;
+
+    float distance = glm::length(center - origin);
+    float cosThetaMax = std::sqrt(1.0f - radius * radius / (distance * distance));
+    float solidAngle = 2.0f * PI * (1.0f - cosThetaMax);
+
+    return 1.0f / solidAngle;
+}
+
+glm::vec3 Sphere::randomPoint(const glm::vec3 &origin) const {
+    const glm::vec3 direction = center - origin;
+    return OrthonormalBasis(direction).local(randomToSphere(radius, glm::length(direction)));
 }

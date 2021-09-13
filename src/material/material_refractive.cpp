@@ -4,8 +4,8 @@
 MaterialRefractive::MaterialRefractive(float refractionIndex) :
         refractionIndex(refractionIndex) {}
 
-ScatterInfo MaterialRefractive::scatter(const Ray &ray, const glm::vec3 &pos, const glm::vec3 &normal,
-                                        const glm::vec2 &uv, bool frontFace) const {
+bool MaterialRefractive::scatter(ScatterRecord &scatterRecord, const Ray &ray, const glm::vec3 &pos,
+                                 const glm::vec3 &normal, const glm::vec2 &uv, bool frontFace) const {
     float refractionIndexRatio = frontFace ? (1.0f / refractionIndex) : refractionIndex;
     glm::vec3 scatteredRayDirection;
 
@@ -18,9 +18,10 @@ ScatterInfo MaterialRefractive::scatter(const Ray &ray, const glm::vec3 &pos, co
     else
         scatteredRayDirection = reflectVector(ray.getNormalizedDirection(), normal);
 
-    return {
-            .doesScatter = true,
-            .attenuation = glm::vec3(1.0f, 1.0f, 1.0f),
-            .scatteredRay = Ray(pos, scatteredRayDirection)
-    };
+    scatterRecord.isSpecular = true;
+    scatterRecord.attenuation = glm::vec3(1.0f, 1.0f, 1.0f);
+    scatterRecord.pdf = nullptr;
+    scatterRecord.specularRay = Ray(pos, scatteredRayDirection);
+
+    return true;
 }

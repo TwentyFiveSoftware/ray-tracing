@@ -13,6 +13,10 @@ public:
 
     bool boundingBox(AABB &outputBox) const override;
 
+    [[nodiscard]] float pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const override;
+
+    [[nodiscard]] glm::vec3 randomPoint(const glm::vec3 &origin) const override;
+
 private:
     glm::vec3 boxMin;
     glm::vec3 boxMax;

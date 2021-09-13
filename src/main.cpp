@@ -77,7 +77,7 @@ int WinMain() {
     }
 
     // SCENE
-    Scene scene = Scene::createComplexScene();
+    Scene scene = Scene::createCornellBoxScene();
 
     // RENDER THREADS
     auto renderBeginTime = std::chrono::steady_clock::now();

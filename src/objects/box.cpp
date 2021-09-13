@@ -26,3 +26,11 @@ bool Box::boundingBox(AABB &outputBox) const {
     outputBox = AABB(boxMin, boxMax);
     return true;
 }
+
+float Box::pdfValue(const glm::vec3 &origin, const glm::vec3 &direction) const {
+    return sides.pdfValue(origin, direction);
+}
+
+glm::vec3 Box::randomPoint(const glm::vec3 &origin) const {
+    return sides.randomPoint(origin);
+}
