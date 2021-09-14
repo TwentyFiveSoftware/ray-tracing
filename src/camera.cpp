@@ -20,7 +20,7 @@ Camera::Camera(CameraSettings cameraSettings) :
 
 Ray Camera::getRay(float u, float v) const {
     glm::vec3 random = (cameraSettings.aperture / 2.0f) * getRandomPointInUnitDisk();
-    glm::vec3 offset = up * random.x + right * random.y;
+    glm::vec3 offset = up * random.y + right * random.x;
 
     glm::vec3 from = cameraSettings.lookFrom + offset;
     glm::vec3 to = upperLeftCorner + horizontal * u - vertical * v;
