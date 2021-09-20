@@ -46,8 +46,8 @@ Scene Scene::createRandomScene() {
     objects.add(std::make_shared<Sphere>(glm::vec3(0.0f, -1000.0f, 0.0f), 1000.0f,
                                          std::make_shared<MaterialDiffuse>(textureGround)));
 
-    for (int16_t x = -10; x < 10; x++) {
-        for (int16_t z = -10; z < 10; z++) {
+    for (int16_t x = -11; x < 11; x++) {
+        for (int16_t z = -11; z < 11; z++) {
             glm::vec3 sphereCenter = glm::vec3(float(x) + 0.9f * randomFloat(), 0.2f, float(z) + 0.9f * randomFloat());
 
             std::shared_ptr<Material> sphereMaterial;
@@ -55,12 +55,13 @@ Scene Scene::createRandomScene() {
             float mat = randomFloat();
 
             if (mat < 0.8) {
-                glm::vec3 albedo = randomVector(0.0f, 1.0f) * randomVector(0.0f, 1.0f);
+                glm::vec3 albedo = getRandomColor();
                 sphereMaterial = std::make_shared<MaterialDiffuse>(albedo);
 
             } else if (mat < 0.95) {
                 glm::vec3 albedo = randomVector(0.5f, 1.0f);
-                float fuzz = randomFloat(0.0f, 0.5f);
+//                float fuzz = randomFloat(0.0f, 0.5f);
+                float fuzz = 0.0f;
                 sphereMaterial = std::make_shared<MaterialMetal>(albedo, fuzz);
 
             } else {
@@ -74,7 +75,7 @@ Scene Scene::createRandomScene() {
     auto material1 = std::make_shared<MaterialRefractive>(1.5f);
     objects.add(make_shared<Sphere>(glm::vec3(0.0f, 1.0f, 0.0f), 1.0f, material1));
 
-    auto material2 = std::make_shared<MaterialDiffuse>(glm::vec3(0.4f, 0.2f, 0.1f));
+    auto material2 = std::make_shared<MaterialDiffuse>(glm::vec3(0.6f, 0.3f, 0.1f));
     objects.add(make_shared<Sphere>(glm::vec3(-4.0f, 1.0f, 0.0f), 1.0f, material2));
 
     auto material3 = std::make_shared<MaterialMetal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.0f);
@@ -84,7 +85,8 @@ Scene Scene::createRandomScene() {
     Camera camera(
             {
                     .fov = 25.0f,
-                    .aperture = 0.1f,
+//                    .aperture = 0.1f,
+                    .aperture = 0.0f,
                     .focusDistance = 10.0f,
                     .lookFrom = glm::vec3(12.0f, 2.0f, -3.0f),
                     .lookAt = glm::vec3(0.0f, 0.0f, 0.0f)
