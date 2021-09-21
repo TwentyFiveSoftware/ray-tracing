@@ -18,7 +18,7 @@ image. The third version is the continuation of the second one, but using the
 dedicated [Vulkan Ray Tracing](https://www.khronos.org/blog/vulkan-ray-tracing-final-specification-release) extension
 instead of a compute shader, to speed up the rendering process even further. The extension allows accessing the
 dedicated [Ray Accelerators](https://www.amd.com/de/technologies/rdna-2) in the new AMD RDNA 2 GPUs or the
-dedicated [RT Cores](https://www.nvidia.com/de-de/design-visualization/technologies/turing-architecture/) in NVIDIA's
+dedicated [RT Cores](https://www.nvidia.com/en-us/design-visualization/technologies/turing-architecture/) in NVIDIA's
 RTX graphics cards. The performance differences are compared below.
 
 - [CPU Ray Tracing](https://github.com/TwentyFiveSoftware/ray-tracing)
