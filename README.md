@@ -34,5 +34,5 @@ depth, the same resolution (1920 x 1080). The measured times are averaged over m
 
 | | [CPU Ray Tracing](https://github.com/TwentyFiveSoftware/ray-tracing) | [GPU Ray Tracing (Compute Shader)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu) | [GPU Ray Tracing (Vulkan RT extension)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu-vulkan) |
 | --- | --- | --- | --- |
-| 1 sample / pixel | ~ 18.000 ms | 21.5 ms | 1.25 ms |
-| 10,000 samples / pixel | ~ 50 h (extrapolated) | 215 s | 12.5 s |
+| 1 sample / pixel | ~ 3,800 ms | 21.5 ms | 1.25 ms |
+| 10,000 samples / pixel | ~ 10.5 h (extrapolated) | 215 s | 12.5 s |
