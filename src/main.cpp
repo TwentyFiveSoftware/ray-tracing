@@ -108,7 +108,7 @@ int WinMain() {
         if (!renderEndTime) {
             // THREADS
             bool allThreadsFinished = true;
-            for (std::future<void> &renderThread : renderThreads) {
+            for (std::future<void> &renderThread: renderThreads) {
                 auto status = renderThread.wait_for(std::chrono::milliseconds(0));
                 if (status != std::future_status::ready) {
                     allThreadsFinished = false;
@@ -121,8 +121,9 @@ int WinMain() {
                         std::chrono::steady_clock::now() - sampleRenderBeginTime).count();
                 sampleRenderBeginTime = std::chrono::steady_clock::now();
 
-                std::cout << "Sample " << currentPixelSample << " / " << Settings::SAMPLES_PER_PIXEL
-                          << " rendered in " << sampleRenderTime << " ms" << std::endl;
+                SDL_Log(("Sample " + std::to_string(currentPixelSample) + " / " +
+                         std::to_string(Settings::SAMPLES_PER_PIXEL) + " rendered in " +
+                         std::to_string(sampleRenderTime) + " ms").c_str());
 
                 if (Settings::SAVE_IMAGE_AFTER_EACH_SAMPLE)
                     saveImage();
@@ -141,10 +142,8 @@ int WinMain() {
             // END PRESENTING
             if (currentPixelSample > Settings::SAMPLES_PER_PIXEL) {
                 renderEndTime = std::chrono::steady_clock::now();
-                std::cout << "Rendered in "
-                          << std::chrono::duration_cast<std::chrono::milliseconds>(
-                                  renderEndTime.value() - renderBeginTime).count()
-                          << "ms" << std::endl;
+                SDL_Log(("Rendered in " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+                        renderEndTime.value() - renderBeginTime).count()) + "ms").c_str());
 
                 saveImage();
             }
@@ -162,7 +161,7 @@ int WinMain() {
     // CLEANUP
     nextPixelRowToRender = Settings::HEIGHT;
 
-    for (std::future<void> &renderThread : renderThreads) {
+    for (std::future<void> &renderThread: renderThreads) {
         renderThread.get();
     }
 
