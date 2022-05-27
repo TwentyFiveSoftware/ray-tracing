@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "renderer.h"
 #include "camera.h"
+#include "utils.h"
 
 int main(int argc, char *argv[]) {
     std::cout << std::fixed;
@@ -27,11 +28,18 @@ int main(int argc, char *argv[]) {
         std::cout << (y + 1) << " / " << HEIGHT << " (" << (float(y + 1) / HEIGHT * 100.0f) << "%)" << std::endl;
 
         for (uint32_t x = 0; x < WIDTH; ++x) {
-            float u = float(x) / WIDTH;
-            float v = float(y) / HEIGHT;
+            glm::vec3 pixelColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
-            Ray ray = camera.getRay(u, v);
-            putPixelInArray(x, y, pixels, calculateRayColor(scene, ray, MAX_RAY_TRACE_DEPTH));
+            for (uint32_t sample = 0; sample < SAMPLES_PER_PIXEL; ++sample) {
+                float u = (float(x) + randomFloat()) / (WIDTH - 1);
+                float v = (float(y) + randomFloat()) / (HEIGHT - 1);
+
+                Ray ray = camera.getRay(u, v);
+                pixelColor += calculateRayColor(scene, ray, MAX_RAY_TRACE_DEPTH);
+            }
+
+            pixelColor /= float(SAMPLES_PER_PIXEL);
+            putPixelInArray(x, y, pixels, pixelColor);
         }
     }
 

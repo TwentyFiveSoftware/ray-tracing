@@ -37,6 +37,8 @@ glm::vec3 calculateRayColor(const Scene &scene, const Ray &ray, int32_t depth) {
 }
 
 void putPixelInArray(uint32_t x, uint32_t y, uint8_t *pixels, glm::vec3 rgb) {
+    rgb = glm::sqrt(rgb);
+    rgb = glm::clamp(rgb, 0.0f, 1.0f);
     rgb *= 0xFF;
 
     uint64_t index = (y * WIDTH + x) * 3;
