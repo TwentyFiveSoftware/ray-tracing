@@ -1,6 +1,6 @@
 # Ray Tracing
 
-<img src="https://github.com/TwentyFiveSoftware/ray-tracing/blob/master/sceneRender.png">
+<img src="https://github.com/TwentyFiveSoftware/ray-tracing-gpu/blob/master/sceneRender.png">
 
 ## Overview
 
