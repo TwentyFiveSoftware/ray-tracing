@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
             float v = float(y) / HEIGHT;
 
             Ray ray = camera.getRay(u, v);
-            putPixelInArray(x, y, pixels, calculateRayColor(scene, ray));
+            putPixelInArray(x, y, pixels, calculateRayColor(scene, ray, MAX_RAY_TRACE_DEPTH));
         }
     }
 

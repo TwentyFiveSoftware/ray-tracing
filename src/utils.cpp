@@ -20,6 +20,11 @@ glm::vec3 getRandomUnitVector() {
             continue;
         }
 
-        return point;
+        return glm::normalize(point);
     }
+}
+
+bool isNearZero(const glm::vec3 &vector) {
+    float epsilon = 1e-8;
+    return std::abs(vector.x) < epsilon && std::abs(vector.y) < epsilon && std::abs(vector.z) < epsilon;
 }

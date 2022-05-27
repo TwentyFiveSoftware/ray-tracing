@@ -1,8 +1,9 @@
 #include "sphere.h"
 
-Sphere::Sphere() : center(), radius() {}
+Sphere::Sphere() : center(), radius(), material() {}
 
-Sphere::Sphere(const glm::vec3 &center, float radius) : center(center), radius(radius) {}
+Sphere::Sphere(const glm::vec3 &center, float radius, const Material &material)
+        : center(center), radius(radius), material(material) {}
 
 HitRecord Sphere::rayHitsSphere(const Ray &ray, float tMin, float tMax) const {
     glm::vec3 oc = ray.getOrigin() - center;
@@ -34,6 +35,7 @@ HitRecord Sphere::rayHitsSphere(const Ray &ray, float tMin, float tMax) const {
             .t = t,
             .point = point,
             .normal = normal,
-            .isFrontFace = isFrontFace
+            .isFrontFace = isFrontFace,
+            .material = material,
     };
 }

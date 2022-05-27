@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include "constants.h"
 #include "hit_record.h"
+#include "scatter.h"
 
 HitRecord rayHitsScene(const Scene &scene, const Ray &ray, float tMin, float tMax) {
     HitRecord currentHitRecord = {.t = tMax};
@@ -15,10 +16,20 @@ HitRecord rayHitsScene(const Scene &scene, const Ray &ray, float tMin, float tMa
     return currentHitRecord;
 }
 
-glm::vec3 calculateRayColor(const Scene &scene, const Ray &ray) {
+glm::vec3 calculateRayColor(const Scene &scene, const Ray &ray, int32_t depth) {
+    if (depth <= 0) {
+        return {0.0f, 0.0f, 0.0f};
+    }
+
     HitRecord hitRecord = rayHitsScene(scene, ray, 0.001f, std::numeric_limits<float>::infinity());
     if (hitRecord.hit) {
-        return (hitRecord.normal + 1.0f) * 0.5f;
+        ScatterInfo scatterInfo = scatter(ray, hitRecord);
+
+        if (scatterInfo.doesScatter) {
+            return scatterInfo.attenuation * calculateRayColor(scene, scatterInfo.scatteredRay, depth - 1);
+        }
+
+        return {0.0f, 0.0f, 0.0f};
     }
 
     float t = 0.5f * (glm::normalize(ray.getDirection()).y + 1.0f);
