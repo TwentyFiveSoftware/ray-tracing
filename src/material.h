@@ -4,10 +4,12 @@
 
 enum MaterialType {
     DIFFUSE,
-    METAL
+    METAL,
+    DIELECTRIC,
 };
 
 struct Material {
     MaterialType type;
     glm::vec3 albedo;
+    float refractionIndex;
 };
