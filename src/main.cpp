@@ -19,6 +19,8 @@ int main(int argc, char *argv[]) {
             10.0
     );
 
+    auto scene = Scene();
+
     auto *pixels = new uint8_t[WIDTH * HEIGHT * 3];
 
     for (uint32_t y = 0; y < HEIGHT; ++y) {
@@ -29,7 +31,7 @@ int main(int argc, char *argv[]) {
             float v = float(y) / HEIGHT;
 
             Ray ray = camera.getRay(u, v);
-            putPixelInArray(x, y, pixels, calculateRayColor(ray));
+            putPixelInArray(x, y, pixels, calculateRayColor(scene, ray));
         }
     }
 

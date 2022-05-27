@@ -1,7 +1,26 @@
 #include "renderer.h"
 #include "constants.h"
+#include "hit_record.h"
 
-glm::vec3 calculateRayColor(const Ray &ray) {
+HitRecord rayHitsScene(const Scene &scene, const Ray &ray, float tMin, float tMax) {
+    HitRecord currentHitRecord = {.t = tMax};
+
+    for (const Sphere &sphere: scene.getSpheres()) {
+        HitRecord hitRecord = sphere.rayHitsSphere(ray, tMin, currentHitRecord.t);
+        if (hitRecord.hit) {
+            currentHitRecord = hitRecord;
+        }
+    }
+
+    return currentHitRecord;
+}
+
+glm::vec3 calculateRayColor(const Scene &scene, const Ray &ray) {
+    HitRecord hitRecord = rayHitsScene(scene, ray, 0.001f, std::numeric_limits<float>::infinity());
+    if (hitRecord.hit) {
+        return (hitRecord.normal + 1.0f) * 0.5f;
+    }
+
     float t = 0.5f * (glm::normalize(ray.getDirection()).y + 1.0f);
     return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
 }
