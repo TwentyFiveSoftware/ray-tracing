@@ -8,8 +8,15 @@ enum MaterialType {
     DIELECTRIC,
 };
 
+enum TextureType {
+    SOLID,
+    CHECKERED,
+};
+
 struct Material {
     MaterialType type;
+    TextureType textureType;
     glm::vec3 albedo;
+    glm::vec3 albedo2;
     float refractionIndex;
 };
