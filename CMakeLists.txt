@@ -9,4 +9,4 @@ include_directories(
 )
 
 FILE(GLOB_RECURSE PROJECT_SOURCES src/*cpp src/*h)
-add_executable(RayTracing ${PROJECT_SOURCES} src/main.cpp)
+add_executable(RayTracing ${PROJECT_SOURCES} src/main.cpp src/ray.cpp src/renderer.cpp src/camera.cpp src/camera.h src/constants.h src/utils.cpp src/utils.h)

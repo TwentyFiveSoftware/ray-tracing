@@ -1,24 +1,35 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
 #include <stb_image_write.h>
-#include <cstdint>
-
-const uint64_t WIDTH = 1920;
-const uint64_t HEIGHT = 1080;
+#include <iostream>
+#include <iomanip>
+#include "constants.h"
+#include "renderer.h"
+#include "camera.h"
 
 int main(int argc, char *argv[]) {
+    std::cout << std::fixed;
+    std::cout << std::setprecision(2);
+
+    auto camera = Camera(
+            glm::vec3(12.0f, 2.0f, -3.0f),
+            glm::vec3(0.0, 0.0, 0.0),
+            25.0,
+            0.0,
+            10.0
+    );
+
     auto *pixels = new uint8_t[WIDTH * HEIGHT * 3];
 
-    for (int y = 0; y < HEIGHT; ++y) {
-        for (int x = 0; x < WIDTH; ++x) {
-            double r = double(x) / WIDTH;
-            double g = double(y) / HEIGHT;
-            double b = 0.25;
+    for (uint32_t y = 0; y < HEIGHT; ++y) {
+        std::cout << (y + 1) << " / " << HEIGHT << " (" << (float(y + 1) / HEIGHT * 100.0f) << "%)" << std::endl;
 
-            uint64_t index = (y * WIDTH + x) * 3;
-            pixels[index] = static_cast<uint8_t>(r * 0xFF);
-            pixels[index + 1] = static_cast<uint8_t>(g * 0xFF);
-            pixels[index + 2] = static_cast<uint8_t>(b * 0xFF);
+        for (uint32_t x = 0; x < WIDTH; ++x) {
+            float u = float(x) / WIDTH;
+            float v = float(y) / HEIGHT;
+
+            Ray ray = camera.getRay(u, v);
+            putPixelInArray(x, y, pixels, calculateRayColor(ray));
         }
     }
 
@@ -27,3 +38,4 @@ int main(int argc, char *argv[]) {
     delete[] (pixels);
     return 0;
 }
+
