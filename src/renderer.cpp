@@ -19,24 +19,50 @@ HitRecord rayHitsScene(const Scene &scene, const Ray &ray, float tMin, float tMa
     return currentHitRecord;
 }
 
-glm::vec3 calculateRayColor(const Scene &scene, const Ray &ray, int32_t depth) {
-    if (depth <= 0) {
-        return {0.0f, 0.0f, 0.0f};
-    }
+//glm::vec3 calculateRayColor(const Scene &scene, const Ray &ray, int32_t depth) {
+//    if (depth <= 0) {
+//        return {0.0f, 0.0f, 0.0f};
+//    }
+//
+//    HitRecord hitRecord = rayHitsScene(scene, ray, 0.001f, std::numeric_limits<float>::infinity());
+//    if (hitRecord.hit) {
+//        ScatterInfo scatterInfo = scatter(ray, hitRecord);
+//
+//        if (scatterInfo.doesScatter) {
+//            return scatterInfo.attenuation * calculateRayColor(scene, scatterInfo.scatteredRay, depth - 1);
+//        }
+//
+//        return {0.0f, 0.0f, 0.0f};
+//    }
+//
+//    float t = 0.5f * (glm::normalize(*ray.getDirection()).y + 1.0f);
+//    return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
+//}
 
-    HitRecord hitRecord = rayHitsScene(scene, ray, 0.001f, std::numeric_limits<float>::infinity());
-    if (hitRecord.hit) {
-        ScatterInfo scatterInfo = scatter(ray, hitRecord);
+glm::vec3 calculateRayColor(const Scene &scene, const Ray &cameraRay) {
+    glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 lightSourceColor = glm::vec3(0.0f, 0.0f, 0.0f);
+    Ray ray = cameraRay;
 
-        if (scatterInfo.doesScatter) {
-            return scatterInfo.attenuation * calculateRayColor(scene, scatterInfo.scatteredRay, depth - 1);
+    for (uint32_t depth = 0; depth < MAX_RAY_TRACE_DEPTH; depth++) {
+        HitRecord hitRecord = rayHitsScene(scene, ray, 0.001f, std::numeric_limits<float>::infinity());
+
+        if (!hitRecord.hit) {
+            lightSourceColor = glm::vec3(0.7f, 0.8f, 1.0f);
+            break;
         }
 
-        return {0.0f, 0.0f, 0.0f};
+        ScatterInfo scatterInfo = scatter(ray, hitRecord);
+        if (scatterInfo.doesScatter) {
+            color *= scatterInfo.attenuation;
+            ray = scatterInfo.scatteredRay;
+        } else {
+            lightSourceColor = glm::vec3(0.0f, 0.0f, 0.0f);
+            break;
+        }
     }
 
-    float t = 0.5f * (glm::normalize(*ray.getDirection()).y + 1.0f);
-    return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
+    return color * lightSourceColor;
 }
 
 void putPixelInArray(uint32_t x, uint32_t y, uint8_t *pixels, glm::vec3 rgb) {
@@ -59,7 +85,8 @@ void renderRow(uint32_t y, uint8_t *pixels, const Camera &camera, const Scene &s
             float v = (float(y) + randomFloat()) / (HEIGHT - 1);
 
             Ray ray = camera.getRay(u, v);
-            pixelColor += calculateRayColor(scene, ray, MAX_RAY_TRACE_DEPTH);
+            pixelColor += calculateRayColor(scene, ray);
+//            pixelColor += calculateRayColor(scene, ray, MAX_RAY_TRACE_DEPTH);
         }
 
         pixelColor /= float(SAMPLES_PER_PIXEL);

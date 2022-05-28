@@ -22,21 +22,21 @@ ScatterInfo scatterDiffuse(const Ray &ray, const HitRecord &hitRecord) {
         scatterDirection = hitRecord.normal;
     }
 
-    return {true, getColor(hitRecord), Ray(hitRecord.point, scatterDirection)};
+    return {true, getColor(hitRecord), {hitRecord.point, scatterDirection}};
 }
 
 ScatterInfo scatterMetal(const Ray &ray, const HitRecord &hitRecord) {
-    glm::vec3 scatterDirection = reflect(glm::normalize(*ray.getDirection()), hitRecord.normal);
+    glm::vec3 scatterDirection = reflect(glm::normalize(ray.direction), hitRecord.normal);
 
-    return {true, getColor(hitRecord), Ray(hitRecord.point, scatterDirection)};
+    return {true, getColor(hitRecord), {hitRecord.point, scatterDirection}};
 }
 
 ScatterInfo scatterDielectric(const Ray &ray, const HitRecord &hitRecord) {
     float refractionRatio = hitRecord.isFrontFace ? (1.0f / hitRecord.material.refractionIndex)
                                                   : hitRecord.material.refractionIndex;
-    glm::vec3 scatterDirection = refract(glm::normalize(*ray.getDirection()), hitRecord.normal, refractionRatio);
+    glm::vec3 scatterDirection = refract(glm::normalize(ray.direction), hitRecord.normal, refractionRatio);
 
-    return {true, glm::vec3(1.0f, 1.0f, 1.0f), Ray(hitRecord.point, scatterDirection)};
+    return {true, glm::vec3(1.0f, 1.0f, 1.0f), {hitRecord.point, scatterDirection}};
 }
 
 ScatterInfo scatter(const Ray &ray, const HitRecord &hitRecord) {
