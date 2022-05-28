@@ -40,6 +40,6 @@ Scene::Scene() : spheres() {
                              {MaterialType::METAL, TextureType::SOLID, glm::vec3(0.7f, 0.6f, 0.5f)}));
 }
 
-std::vector<Sphere> Scene::getSpheres() const {
-    return spheres;
+const std::vector<Sphere>* Scene::getSpheres() const {
+    return &spheres;
 }

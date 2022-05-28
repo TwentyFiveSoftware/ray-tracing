@@ -1,20 +1,17 @@
 #include <glm/glm.hpp>
 #include "utils.h"
 
-float randomFloat(float min, float max) {
-    std::random_device rd;
-    std::mt19937 engine(rd());
-    std::uniform_real_distribution<float> distribution(min, max);
-    return distribution(engine);
-}
+std::random_device rd;
+std::mt19937 engine(rd());
+std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
 float randomFloat() {
-    return randomFloat(0.0f, 1.0f);
+    return distribution(engine);
 }
 
 glm::vec3 getRandomUnitVector() {
     while (true) {
-        auto point = glm::vec3(randomFloat(-1.0f, 1.0f), randomFloat(-1.0f, 1.0f), randomFloat(-1.0f, 1.0f));
+        auto point = glm::vec3(randomFloat() * 2.0f - 1.0f, randomFloat() * 2.0f - 1.0f, randomFloat() * 2.0f - 1.0f);
 
         if (glm::dot(point, point) >= 1.0f) {
             continue;
@@ -51,7 +48,7 @@ glm::vec3 refract(const glm::vec3 &vector, const glm::vec3 &normal, float refrac
 
 // https://www.codespeedy.com/hsv-to-rgb-in-cpp/
 glm::vec3 getRandomColor() {
-    float h = std::floor(randomFloat(0.0f, 360.0f));
+    float h = std::floor(randomFloat() * 360.0f);
     float s = 0.75f, v = 0.45f;
 
     float C = s * v;

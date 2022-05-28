@@ -9,7 +9,7 @@
 HitRecord rayHitsScene(const Scene &scene, const Ray &ray, float tMin, float tMax) {
     HitRecord currentHitRecord = {.t = tMax};
 
-    for (const Sphere &sphere: scene.getSpheres()) {
+    for (const Sphere &sphere: *scene.getSpheres()) {
         HitRecord hitRecord = sphere.rayHitsSphere(ray, tMin, currentHitRecord.t);
         if (hitRecord.hit) {
             currentHitRecord = hitRecord;
@@ -35,7 +35,7 @@ glm::vec3 calculateRayColor(const Scene &scene, const Ray &ray, int32_t depth) {
         return {0.0f, 0.0f, 0.0f};
     }
 
-    float t = 0.5f * (glm::normalize(ray.getDirection()).y + 1.0f);
+    float t = 0.5f * (glm::normalize(*ray.getDirection()).y + 1.0f);
     return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
 }
 

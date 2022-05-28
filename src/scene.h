@@ -1,13 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <array>
 #include "sphere.h"
 
 class Scene {
 public:
     Scene();
 
-    [[nodiscard]] std::vector<Sphere> getSpheres() const;
+    [[nodiscard]] const std::vector<Sphere>* getSpheres() const;
 
 private:
     std::vector<Sphere> spheres;
