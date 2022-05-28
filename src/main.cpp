@@ -9,7 +9,7 @@
 #include "renderer.h"
 #include "camera.h"
 
-int main(int argc, char *argv[]) {
+int main() {
     std::cout << std::fixed;
     std::cout << std::setprecision(2);
 
@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
     std::atomic<uint32_t> nextRow = {0};
     std::vector<std::thread> threadPool = {};
 
+    auto renderStartTime = std::chrono::steady_clock::now();
+
     for (int i = 0; i < RENDER_THREADS; ++i) {
         threadPool.emplace_back(std::thread(renderThread, std::ref(nextRow), pixels, camera, scene));
     }
@@ -35,6 +37,11 @@ int main(int argc, char *argv[]) {
     for (std::thread &thread: threadPool) {
         thread.join();
     }
+
+    auto elapsedRenderTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now() - renderStartTime).count();
+    std::cout << "Rendered " << SAMPLES_PER_PIXEL << " samples/pixel with " << RENDER_THREADS << " threads in "
+              << elapsedRenderTime << " ms" << std::endl;
 
     stbi_write_png("render.png", WIDTH, HEIGHT, 3, pixels, WIDTH * 3);
 
