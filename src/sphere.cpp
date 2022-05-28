@@ -6,7 +6,7 @@ Sphere::Sphere(const glm::vec3 &center, float radius, const Material &material)
         : center(center), radius(radius), material(material) {}
 
 HitRecord Sphere::rayHitsSphere(const Ray &ray, float tMin, float tMax) const {
-    const glm::vec3 oc = ray.direction - center;
+    const glm::vec3 oc = ray.origin - center;
     float a = glm::dot(ray.direction, ray.direction);
     float halfB = glm::dot(oc, ray.direction);
     float c = glm::dot(oc, oc) - radius * radius;

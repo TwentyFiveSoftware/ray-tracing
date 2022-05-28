@@ -28,5 +28,5 @@ Ray Camera::getRay(float u, float v) const {
 
     glm::vec3 from = lookFrom + offset;
     glm::vec3 to = upperLeftCorner + horizontalDirection * u - verticalDirection * v;
-    return {from, to - from};
+    return {from, glm::normalize(to - from)};
 }

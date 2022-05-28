@@ -35,7 +35,7 @@ HitRecord rayHitsScene(const Scene &scene, const Ray &ray, float tMin, float tMa
 //        return {0.0f, 0.0f, 0.0f};
 //    }
 //
-//    float t = 0.5f * (glm::normalize(*ray.getDirection()).y + 1.0f);
+//    float t = 0.5f * (ray.direction.y + 1.0f);
 //    return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
 //}
 
