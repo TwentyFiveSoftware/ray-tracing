@@ -7,32 +7,36 @@
 This is my take on [Peter Shirley's Ray Tracing in One Weekend](https://github.com/RayTracing/raytracing.github.io) book
 series.
 
-This repository contains all the topics covered in the three books. On top of the presented ray tracing code, I added
-some enhancements like multi-threading and a window to display the rendering process.
+The **main** branch contains all the topics covered in the three books. On top of the presented ray tracing code, I
+added some enhancements like multi-threading and a window to display the rendering process.
 
-## My Ray Tracing series
+The **benchmark** branch contains an optimized version of the first book, which I use to compare the render time to 
+my ray tracing implementations in other languages (see below).
 
-This is the first part of my 3 project series. After this ray tracing implementation using the CPU to render the image,
-I created another one using the [Vulkan API](https://vulkan.org/) to dispatch a compute shader on the GPU to render the
-image. The third version is the continuation of the second one, but using the
-dedicated [Vulkan Ray Tracing](https://www.khronos.org/blog/vulkan-ray-tracing-final-specification-release) extension
-instead of a compute shader, to speed up the rendering process even further. The extension allows accessing the
-dedicated [Ray Accelerators](https://www.amd.com/de/technologies/rdna-2) in the new AMD RDNA 2 GPUs or the
-dedicated [RT Cores](https://www.nvidia.com/en-us/design-visualization/technologies/turing-architecture/) in NVIDIA's
-RTX graphics cards. The performance differences are compared below.
 
-- [CPU Ray Tracing](https://github.com/TwentyFiveSoftware/ray-tracing)
-- [GPU Ray Tracing (Compute Shader)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu)
-- [GPU Ray Tracing (Vulkan Ray Tracing extension)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu-vulkan)
+## Build & Run this project
+
+1. Install [CMake](https://cmake.org/download/)
+2. Clone the repository
+3. Optional: Change sample and thead count in `src/constants.h`
+4. Build and run the project
+   ```sh
+   make
+   ```
+
 
 ## Performance
+
+I've already implemented Peter Shirley's ray tracing in various programming languages running on CPU & GPU and compared their performance.
 
 The performance was measured on the same scene (see image above) with the same amount of objects, the same recursive
 depth, the same resolution (1920 x 1080). The measured times are averaged over multiple runs.
 
 *Reference system: AMD Ryzen 9 5900X (12 Cores / 24 Threads) | AMD Radeon RX 6800 XT*
 
-| | [CPU Ray Tracing](https://github.com/TwentyFiveSoftware/ray-tracing) | [GPU Ray Tracing (Compute Shader)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu) | [GPU Ray Tracing (Vulkan RT extension)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu-vulkan) |
-| --- | --- | --- | --- |
-| 1 sample / pixel | ~ 3,800 ms | 21.5 ms | 1.25 ms |
-| 10,000 samples / pixel | ~ 10.5 h (extrapolated) | 215 s | 12.5 s |
+|                                                                                                                     | 1 sample / pixel | 100 samples / pixel |        10,000 samples / pixel | 
+|---------------------------------------------------------------------------------------------------------------------|-----------------:|--------------------:|------------------------------:|
+| [CPU Ray Tracing <br/>(C++)](https://github.com/TwentyFiveSoftware/ray-tracing)                                     |       1,300.0 ms |             125.2 s | ~ 3.5 h <br/>_(extrapolated)_ |
+| [CPU Ray Tracing <br/>(Rust)](https://github.com/TwentyFiveSoftware/rust-ray-tracing)                               |         500.0 ms |              49.7 s | ~ 1.4 h <br/>_(extrapolated)_ |
+| [GPU Ray Tracing <br/>(Compute Shader)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu)                      |          21.5 ms |               2.1 s |                       215.0 s |
+| [GPU Ray Tracing <br/>(Vulkan Ray Tracing extension)](https://github.com/TwentyFiveSoftware/ray-tracing-gpu-vulkan) |           1.2 ms |               0.1 s |                        12.5 s |
