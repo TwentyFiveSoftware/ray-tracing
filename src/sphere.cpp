@@ -27,7 +27,7 @@ HitRecord Sphere::rayHitsSphere(const Ray &ray, float tMin, float tMax) const {
         }
     }
 
-    const vec3 point = rayAt(ray, t);
+    const vec3 point = ray.at(t);
     const vec3 normal = (point - center) / radius;
     bool isFrontFace = ray.direction.dot(normal) < 0.0;
 

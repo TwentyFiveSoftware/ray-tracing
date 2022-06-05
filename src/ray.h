@@ -5,6 +5,8 @@
 struct Ray {
     vec3 origin;
     vec3 direction;
-};
 
-[[nodiscard]] vec3 rayAt(const Ray &ray, float t);
+    [[nodiscard]] inline vec3 at(float t) const {
+        return origin + direction * t;
+    }
+};
