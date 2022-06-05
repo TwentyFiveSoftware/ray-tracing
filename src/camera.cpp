@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "utils.h"
 
-Camera::Camera(const glm::vec3 &lookFrom, const glm::vec3 &lookAt, float fov, float aperture, float focusDistance)
+Camera::Camera(const vec3 &lookFrom, const vec3 &lookAt, float fov, float aperture, float focusDistance)
         : lookFrom(lookFrom), aperture(aperture), upperLeftCorner(), horizontalDirection(), verticalDirection(), up(),
           right() {
 
@@ -13,9 +13,9 @@ Camera::Camera(const glm::vec3 &lookFrom, const glm::vec3 &lookAt, float fov, fl
     float viewportHeight = std::tan(fov * float(M_PI / 180.0f) * 0.5f) * 2.0f;
     float viewportWidth = viewportHeight * aspectRatio;
 
-    glm::vec3 forward = glm::normalize(lookAt - lookFrom);
-    right = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), forward));
-    up = glm::normalize(glm::cross(forward, right));
+    vec3 forward = (lookAt - lookFrom).normalized();
+    right = (vec3{0.0f, 1.0f, 0.0f}).cross(forward).normalized();
+    up = forward.cross(right).normalized();
 
     horizontalDirection = right * viewportWidth * focusDistance;
     verticalDirection = up * viewportHeight * focusDistance;
@@ -23,10 +23,10 @@ Camera::Camera(const glm::vec3 &lookFrom, const glm::vec3 &lookAt, float fov, fl
 }
 
 Ray Camera::getRay(float u, float v) const {
-    glm::vec3 random = (aperture * 0.5f) * getRandomUnitVector();
-    glm::vec3 offset = up * random.y + right * random.x;
+    vec3 random = getRandomUnitVector() * (aperture * 0.5f);
+    vec3 offset = up * random.y + right * random.x;
 
-    glm::vec3 from = lookFrom + offset;
-    glm::vec3 to = upperLeftCorner + horizontalDirection * u - verticalDirection * v;
-    return {from, glm::normalize(to - from)};
+    vec3 from = lookFrom + offset;
+    vec3 to = upperLeftCorner + horizontalDirection * u - verticalDirection * v;
+    return {from, (to - from).normalized()};
 }

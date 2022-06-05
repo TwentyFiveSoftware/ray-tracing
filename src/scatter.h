@@ -1,12 +1,11 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "ray.h"
 #include "hit_record.h"
 
 struct ScatterInfo {
     bool doesScatter;
-    glm::vec3 attenuation;
+    vec3 attenuation;
     Ray scatteredRay;
 };
 

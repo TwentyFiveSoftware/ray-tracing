@@ -1,15 +1,16 @@
 #include "sphere.h"
+#include <cmath>
 
 Sphere::Sphere() : center(), radius(), material() {}
 
-Sphere::Sphere(const glm::vec3 &center, float radius, const Material &material)
+Sphere::Sphere(const vec3 &center, float radius, const Material &material)
         : center(center), radius(radius), material(material) {}
 
 HitRecord Sphere::rayHitsSphere(const Ray &ray, float tMin, float tMax) const {
-    const glm::vec3 oc = ray.origin - center;
-    float a = glm::dot(ray.direction, ray.direction);
-    float halfB = glm::dot(oc, ray.direction);
-    float c = glm::dot(oc, oc) - radius * radius;
+    const vec3 oc = ray.origin - center;
+    float a = ray.direction.dot(ray.direction);
+    float halfB = oc.dot(ray.direction);
+    float c = oc.dot(oc) - radius * radius;
     float discriminant = halfB * halfB - a * c;
 
     if (discriminant < 0.0f) {
@@ -26,9 +27,9 @@ HitRecord Sphere::rayHitsSphere(const Ray &ray, float tMin, float tMax) const {
         }
     }
 
-    const glm::vec3 point = rayAt(ray, t);
-    const glm::vec3 normal = (point - center) / radius;
-    bool isFrontFace = glm::dot(ray.direction, normal) < 0.0;
+    const vec3 point = rayAt(ray, t);
+    const vec3 normal = (point - center) / radius;
+    bool isFrontFace = ray.direction.dot(normal) < 0.0;
 
     return {
             .hit = true,

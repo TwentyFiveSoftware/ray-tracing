@@ -14,8 +14,8 @@ int main() {
     std::cout << std::setprecision(2);
 
     auto camera = Camera(
-            glm::vec3(12.0f, 2.0f, -3.0f),
-            glm::vec3(0.0, 0.0, 0.0),
+            vec3(12.0f, 2.0f, -3.0f),
+            vec3(0.0, 0.0, 0.0),
             25.0,
             0.0,
             10.0

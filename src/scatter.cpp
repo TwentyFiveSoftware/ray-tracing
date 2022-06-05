@@ -1,7 +1,8 @@
 #include "scatter.h"
 #include "utils.h"
+#include <cmath>
 
-glm::vec3 getColor(const HitRecord &hitRecord) {
+vec3 getColor(const HitRecord &hitRecord) {
     switch (hitRecord.material.textureType) {
         case SOLID:
             return hitRecord.material.albedo;
@@ -16,7 +17,7 @@ glm::vec3 getColor(const HitRecord &hitRecord) {
 }
 
 ScatterInfo scatterDiffuse(const Ray &ray, const HitRecord &hitRecord) {
-    glm::vec3 scatterDirection = glm::normalize(hitRecord.normal + getRandomUnitVector());
+    vec3 scatterDirection = (hitRecord.normal + getRandomUnitVector()).normalized();
 
     if (isNearZero(scatterDirection)) {
         scatterDirection = hitRecord.normal;
@@ -26,7 +27,7 @@ ScatterInfo scatterDiffuse(const Ray &ray, const HitRecord &hitRecord) {
 }
 
 ScatterInfo scatterMetal(const Ray &ray, const HitRecord &hitRecord) {
-    glm::vec3 scatterDirection = reflect(ray.direction, hitRecord.normal);
+    vec3 scatterDirection = reflect(ray.direction, hitRecord.normal);
 
     return {true, getColor(hitRecord), {hitRecord.point, scatterDirection}};
 }
@@ -34,9 +35,9 @@ ScatterInfo scatterMetal(const Ray &ray, const HitRecord &hitRecord) {
 ScatterInfo scatterDielectric(const Ray &ray, const HitRecord &hitRecord) {
     float refractionRatio = hitRecord.isFrontFace ? (1.0f / hitRecord.material.refractionIndex)
                                                   : hitRecord.material.refractionIndex;
-    glm::vec3 scatterDirection = refract(ray.direction, hitRecord.normal, refractionRatio);
+    vec3 scatterDirection = refract(ray.direction, hitRecord.normal, refractionRatio);
 
-    return {true, glm::vec3(1.0f, 1.0f, 1.0f), {hitRecord.point, scatterDirection}};
+    return {true, vec3{1.0f, 1.0f, 1.0f}, {hitRecord.point, scatterDirection}};
 }
 
 ScatterInfo scatter(const Ray &ray, const HitRecord &hitRecord) {

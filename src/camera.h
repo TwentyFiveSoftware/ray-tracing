@@ -1,11 +1,12 @@
 #pragma once
 
 #include "ray.h"
+#include "vec3.h"
 
 class Camera {
 public:
-    Camera(const glm::vec3 &lookFrom,
-           const glm::vec3 &lookAt,
+    Camera(const vec3 &lookFrom,
+           const vec3 &lookAt,
            float fov,
            float aperture,
            float focusDistance);
@@ -13,11 +14,11 @@ public:
     [[nodiscard]] Ray getRay(float u, float v) const;
 
 private:
-    glm::vec3 lookFrom;
-    glm::vec3 upperLeftCorner;
-    glm::vec3 horizontalDirection;
-    glm::vec3 verticalDirection;
-    glm::vec3 up;
-    glm::vec3 right;
+    vec3 lookFrom;
+    vec3 upperLeftCorner;
+    vec3 horizontalDirection;
+    vec3 verticalDirection;
+    vec3 up;
+    vec3 right;
     float aperture;
 };

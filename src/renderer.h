@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "ray.h"
 #include "scene.h"
 #include "camera.h"

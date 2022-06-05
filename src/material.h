@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "vec3.h"
 
 enum MaterialType {
     DIFFUSE,
@@ -16,7 +16,7 @@ enum TextureType {
 struct Material {
     MaterialType type;
     TextureType textureType;
-    glm::vec3 albedo;
-    glm::vec3 albedo2;
+    vec3 albedo;
+    vec3 albedo2;
     float refractionIndex;
 };
