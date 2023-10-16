@@ -40,7 +40,7 @@ int main() {
 
     auto elapsedRenderTime = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now() - renderStartTime).count();
-    std::cout << "Rendered " << SAMPLES_PER_PIXEL << " samples/pixel with " << RENDER_THREADS << " threads in "
+    std::cout << "rendered " << SAMPLES_PER_PIXEL << " samples/pixel with " << RENDER_THREADS << " threads in "
               << elapsedRenderTime << " ms" << std::endl;
 
     stbi_write_png("render.png", WIDTH, HEIGHT, 3, pixels, WIDTH * 3);

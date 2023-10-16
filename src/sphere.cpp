@@ -35,7 +35,7 @@ HitRecord Sphere::rayHitsSphere(const Ray &ray, float tMin, float tMax) const {
             .hit = true,
             .t = t,
             .point = point,
-            .normal = normal,
+            .normal = isFrontFace ? normal : -normal,
             .isFrontFace = isFrontFace,
             .material = material,
     };
